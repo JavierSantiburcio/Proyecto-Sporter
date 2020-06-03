@@ -22,6 +22,7 @@ import javax.swing.JList;
 import colores.Colores;
 import conexion.Conexion;
 import controlador.CtrlVentanaFrmLogin;
+import controlador.CtrlVentanaPerfilUsuario;
 import imagenes.Imagenes;
 import modelo.Deporte;
 import modelo.Evento;
@@ -111,7 +112,11 @@ public class VentanaFormularioLogin extends JFrame {
 		lblNewLabel.setForeground(colores.getAmarillo());
 		panel.add(lblNewLabel);
 		
-		textUsr = new JTextField(persona.getNombre());
+		String campoUsr = "";
+		if(modificar) {
+			campoUsr = persona.getNombre();
+		}
+		textUsr = new JTextField(campoUsr);
 		textUsr.setBounds(193, 5, 86, 20);
 		panel.add(textUsr);
 		textUsr.setColumns(10);
@@ -128,7 +133,12 @@ public class VentanaFormularioLogin extends JFrame {
 		lblNewLabel_1.setForeground(colores.getAmarillo());
 		panel_1.add(lblNewLabel_1);
 		
-		textEmail = new JTextField(persona.getEmail());
+		String campoEmail = "";
+		if(modificar) {
+			campoEmail = persona.getEmail();
+		}
+		textEmail = new JTextField(campoEmail);
+		if(modificar) textEmail.setEditable(false);
 		panel_1.add(textEmail);
 		textEmail.setColumns(10);
 		
@@ -142,7 +152,11 @@ public class VentanaFormularioLogin extends JFrame {
 		lblNewLabel_1_1.setForeground(colores.getAmarillo());
 		panel_1_1.add(lblNewLabel_1_1);
 		
-		passwordField = new JPasswordField(persona.getPassword());
+		String campoPsswd = "";
+		if(modificar) {
+			campoPsswd = persona.getPassword();
+		}
+		passwordField = new JPasswordField(campoPsswd);
 		panel_1_1.add(passwordField);
 		passwordField.setColumns(10);
 		
@@ -185,7 +199,14 @@ public class VentanaFormularioLogin extends JFrame {
 		button_cancelar.setBackground(colores.getNaranja());
 		panel_2_1_1.add(button_cancelar);
 		
-		button_crear = new JButton("Crear Perfil");
+		String textCrear;
+		if(modificar) {
+			textCrear = "Guardar cambios";
+		}else{
+			textCrear = "Crear perfil";
+		}
+		
+		button_crear = new JButton(textCrear);
 		button_crear.setBackground(colores.getNaranja());
 		panel_2_1_1.add(button_crear);
 		
@@ -325,11 +346,29 @@ public class VentanaFormularioLogin extends JFrame {
 		Persona persona = new Persona(comando);
 		String [] deportes = listDeportes.getSelectedItems();
 		
-		persona.modificarPerfil(usr, localizacion, email, password, deportes); 
+		this.persona.modificarPerfil(usr, localizacion, email, password, deportes); 
+		
+		irVentanaPerfil();
 		
 		this.cerrarVentana();
 	}
 	
+	private void irVentanaPerfil() {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaPerfilUsuario frame = new VentanaPerfilUsuario(persona);
+					CtrlVentanaPerfilUsuario ctrl = new CtrlVentanaPerfilUsuario(frame);
+					frame.controladorVista(ctrl);
+					frame.controladorBotonesTable(ctrl);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
 	public void cerrarVentana() {
 		this.dispose();
 	}

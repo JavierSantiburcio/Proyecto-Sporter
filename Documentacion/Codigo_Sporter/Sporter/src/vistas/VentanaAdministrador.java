@@ -39,15 +39,20 @@ public class VentanaAdministrador extends JFrame  {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Usuario usuario;
+	private static Usuario usuario;
 	private Colores colores = new Colores();
 	private Imagenes imagenes = new Imagenes();
 	private JPanel contentPane;
 	protected static Statement command;
 	private ArrayList<Evento> listaEventos;
-	
+	private JLabel lblAdministrador,lblDeporte,lblUbicacion;
+	private JButton btCerrarSesion,btFiltro,btn2Eliminar,btnEliminar;
+	private JToggleButton btnPerfil;
+	private JTable tabla1;
+	public JTable tabla;
 	private Choice choice_Deporte,choice_Ubicacion;
-
+	private DefaultTableModel modeloTabla;
+	private static Administrador admin;
 	/**
 	 * Launch the application.
 	 */
@@ -57,8 +62,9 @@ public class VentanaAdministrador extends JFrame  {
 				try {
 					Conexion conexion = new Conexion();
 					command = conexion.getcommand();
-					VentanaAdministrador frame = new VentanaAdministrador();
-					frame.setVisible(true);
+					admin = new Administrador(command,34);
+					VentanaAdministrador frame = new VentanaAdministrador(admin);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -94,7 +100,7 @@ public class VentanaAdministrador extends JFrame  {
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
-	public VentanaAdministrador() throws SQLException{
+	public VentanaAdministrador(Administrador admin) throws SQLException{
 		
 		setFont(new Font("Dialog", Font.BOLD, 12));
 		setTitle("Sporter");
@@ -102,7 +108,8 @@ public class VentanaAdministrador extends JFrame  {
 		setForeground(colores.getNaranja());
 		setBackground(colores.getNaranja());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 793, 334);
+		setBounds(100, 100, 876, 334);
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(colores.getVerde());
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -110,18 +117,18 @@ public class VentanaAdministrador extends JFrame  {
 		contentPane.setLayout(null);		
 		
 		
-		JLabel lblDeporte = new JLabel("Deporte");
+		lblDeporte = new JLabel("Deporte");
 		lblDeporte.setBounds(6, 62, 61, 16);
 		lblDeporte.setForeground(colores.getAmarillo());
 		contentPane.add(lblDeporte);
 		
-		JLabel lblUbicacion = new JLabel("Ubicacion");
+		lblUbicacion = new JLabel("Ubicacion");
 		lblUbicacion.setBounds(165, 62, 68, 16);
 		lblUbicacion.setForeground(colores.getAmarillo());
 		contentPane.add(lblUbicacion);
 		
-		JButton btFiltro = new JButton("Filtrar");
-		btFiltro.setBounds(358, 57, 117, 29);
+		btFiltro = new JButton("Filtrar");
+		btFiltro.setBounds(375, 57, 117, 29);
 		btFiltro.setForeground(colores.getNaranja());
 		contentPane.add(btFiltro);
 		btFiltro.addActionListener(new ActionListener() {
@@ -143,22 +150,23 @@ public class VentanaAdministrador extends JFrame  {
 		cargarChoiceUbicacion(choice_Ubicacion);
 		
 		
-		JButton btCerrarSesion = new JButton("Cerrar sesion");
+		btCerrarSesion = new JButton("Cerrar sesion");
 		btCerrarSesion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});		
-		btCerrarSesion.setBounds(659, 6, 117, 29);
+		btCerrarSesion.setBounds(726, 6, 117, 29);
+		btCerrarSesion.setName("cs");
 		contentPane.add(btCerrarSesion);
 		
-		JLabel lblAdministrador = new JLabel("Administrador");
-		lblAdministrador.setBounds(554, 11, 108, 16);
+		lblAdministrador = new JLabel("Administrador");
+		lblAdministrador.setBounds(618, 11, 108, 16);
 		contentPane.add(lblAdministrador);
 		
-		JToggleButton btnPerfil = new JToggleButton("Perfil");
+		btnPerfil = new JToggleButton("Perfil");
 		btnPerfil.setForeground(colores.getNaranja());
-		btnPerfil.setBounds(481, 6, 61, 39);
+		btnPerfil.setBounds(545, 5, 61, 39);
 		contentPane.add(btnPerfil);
 		btnPerfil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -169,30 +177,31 @@ public class VentanaAdministrador extends JFrame  {
 		
 		@SuppressWarnings("serial")
 		Mimodelo t = new Mimodelo();
-		
-		JButton btnEliminar = new javax.swing.JButton("Eliminar");
+		btnEliminar = new JButton("Eliminar");
 		btnEliminar.setName("e");
 		
-		JTable tabla = new javax.swing.JTable();
+		String titulos[] ={"ID","FECHA","HORA","PROPIETARIO","DEPORTE","UBICACIÒN","Nº PARTICIPANTES"," "};
+		
+		tabla = new JTable();
 		tabla.setModel(new javax.swing.table.DefaultTableModel(
 	            new Object [][] {
-	                {null, null, null, null, null, btnEliminar},
-	                {null, null, null, null, null, btnEliminar},
-	                {null, null, null, null, null, btnEliminar},
-	                {null, null, null, null, null, btnEliminar},
-	                {null, null, null, null, null, btnEliminar},
-	                {null, null, null, null, null, btnEliminar},
-	                {null, null, null, null, null, btnEliminar},
-	                {null, null, null, null, null, btnEliminar},
-	                {null, null, null, null, null, btnEliminar},
-	                {null, null, null, null, null, btnEliminar},
-	                {null, null, null, null, null, btnEliminar}
+	                {null, null, null, null, null, null, null, btnEliminar},
+	                {null, null, null, null, null, null, null, btnEliminar},
+	                {null, null, null, null, null, null, null, btnEliminar},
+	                {null, null, null, null, null, null, null, btnEliminar},
+	                {null, null, null, null, null, null, null, btnEliminar},
+	                {null, null, null, null, null, null, null, btnEliminar},
+	                {null, null, null, null, null, null, null, btnEliminar},
+	                {null, null, null, null, null, null, null, btnEliminar},
+	                {null, null, null, null, null, null, null, btnEliminar},
+	                {null, null, null, null, null, null, null, btnEliminar},
+	                {null, null, null, null, null, null, null, btnEliminar}
 	            },
 	            new String [] {
-	                "Propietario", "Deporte", "Ubicacion", "Participantes", "Fecha", " "
+	            		"ID","FECHA","HORA","PROPIETARIO","DEPORTE","UBICACIÒN","Nº PARTICIPANTES"," "
 	            }
 	        ));			
-		    
+		
 			tabla.addMouseListener(new java.awt.event.MouseAdapter() {
 	            public void mouseClicked(java.awt.event.MouseEvent evt) {
 	                tablaMouseClicked(evt);
@@ -204,17 +213,17 @@ public class VentanaAdministrador extends JFrame  {
 				}
 	        });
 		
-	    JScrollPane scrollPaneEventos = new JScrollPane();
-	    scrollPaneEventos.setBounds(6, 114, 539, 192);
+		JScrollPane scrollPaneEventos = new JScrollPane();
+	    scrollPaneEventos.setBounds(8, 114, 620, 192);
 	    scrollPaneEventos.setViewportView(tabla);
 	    contentPane.add(scrollPaneEventos);			
-		scrollPaneEventos.setColumnHeaderView(btnEliminar);			
+		scrollPaneEventos.setColumnHeaderView(btnEliminar);	
 		
 		//String[] titulos = new String[] {
-		//		"Propietario", "Deporte", "Ubicacion", "Participantes", "fecha", " "
+		//		"Propietario", "Deporte", "Ubicacion", "Participantes", "fecha", "hora"," "
 		//	};
 		
-		//listaEventos = obtenerMatrizDatos(,btnEliminar);
+		//listaEventos = obtenerMatrizDatos(titulos,btnEliminar);
 		
 		t.ver_tabla(tabla);
 		
@@ -249,7 +258,7 @@ public class VentanaAdministrador extends JFrame  {
 	            }
 	        ));
 		JScrollPane scrollPaneNonmbreUsuario = new JScrollPane();
-		scrollPaneNonmbreUsuario .setBounds(566, 114, 221, 192);
+		scrollPaneNonmbreUsuario .setBounds(637, 115, 221, 192);
 		scrollPaneNonmbreUsuario .setViewportView(tabla1);
 		contentPane.add(scrollPaneNonmbreUsuario );
 		scrollPaneNonmbreUsuario.setColumnHeaderView(btn2Eliminar);
@@ -262,29 +271,27 @@ public class VentanaAdministrador extends JFrame  {
 		
 		t1.ver_tabla(tabla1);
 		
-		tabla1.addMouseListener(new java.awt.event.MouseAdapter() {
-	            public void mouseClicked(java.awt.event.MouseEvent evt) {
-	                tablaMouseClicked(evt);
-	            }
+		tabla.addMouseListener(new java.awt.event.MouseAdapter() {
+	            
 
-	            private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
+	            private void tablaMouseClicked(java.awt.event.MouseEvent evt) throws SQLException {//GEN-FIRST:event_tablaMouseClicked
 			        
-			        int column = tabla1.getColumnModel().getColumnIndexAtX(evt.getX());
+			        int column = tabla.getColumnModel().getColumnIndexAtX(evt.getX());
 			        int row = evt.getY()/tabla1.getRowHeight();
 			        
-			        if(row < tabla1.getRowCount() && row >= 0 && column < tabla1.getColumnCount() && column >= 0){
+			        if(row < tabla.getRowCount() && row >= 0 && column < tabla1.getColumnCount() && column >= 0){
 			            Object value = tabla1.getValueAt(row, column);
 			            if(value instanceof JButton){
 			                ((JButton)value).doClick();
 			                JButton boton = (JButton) value;
 
 			             
-			                if(boton.getName().equals("ee")){
+			                if(boton.getName().equals("e")){
 			                    JOptionPane.showConfirmDialog(null, "Desea eliminar este registro", "Confirmar", JOptionPane.OK_CANCEL_OPTION);
 			                    System.out.println("Click en el boton eliminar");
 			                    Object id;
 								//EVENTOS ELIMINAR
-			                    
+			                    borrarEvento();
 			                
 			                }
 			            }
@@ -294,36 +301,66 @@ public class VentanaAdministrador extends JFrame  {
 			    }//GEN-LAST:event_tablaMouseClicked
 	        });
 	       
-	     
+		tabla1.addMouseListener(new java.awt.event.MouseAdapter() {
+	        
+
+	        private void tablaMouseClicked(java.awt.event.MouseEvent evt) throws SQLException {//GEN-FIRST:event_tablaMouseClicked
+		        
+		        int column = tabla1.getColumnModel().getColumnIndexAtX(evt.getX());
+		        int row = evt.getY()/tabla1.getRowHeight();
+		        
+		        if(row < tabla1.getRowCount() && row >= 0 && column < tabla1.getColumnCount() && column >= 0){
+		            Object value = tabla1.getValueAt(row, column);
+		            if(value instanceof JButton){
+		                ((JButton)value).doClick();
+		                JButton boton = (JButton) value;
+
+		             
+		                if(boton.getName().equals("ee")){
+		                    JOptionPane.showConfirmDialog(null, "Desea eliminar este registro", "Confirmar", JOptionPane.OK_CANCEL_OPTION);
+		                    System.out.println("Click en el boton eliminar");
+		                    Object id;
+							//EVENTOS ELIMINAR
+		                    //borrarusuario(persona);
+		                
+		                }
+		            }
+		        
+		        }
+		        
+		    }//GEN-LAST:event_tablaMouseClicked
+	    });
 	
 	}
 	
-    
 	
-	private Object[][] obtenerMatrizDatos(ArrayList<String> st, JButton btnEliminar){
-		
-		Object informacion[][] = new String[listaEventos.size()][st.size()];
-		for(int x = 0; x < informacion.length; x++){
-			informacion[x][0] = listaEventos.get(x).getId() + "";
-			informacion[x][1] = listaEventos.get(x).getDeporte() + "";
-			informacion[x][2] = listaEventos.get(x).getUbicacion() + "";
-			informacion[x][3] = listaEventos.get(x).getNumeroParticipantes() + "";
-			informacion[x][4] = listaEventos.get(x).getFecha() + "";
-			informacion[x][5] = btnEliminar;
-		}
-		return informacion;
-	}
-	
-	
-	private Object[][] obtenerMatrizUsuarios(ArrayList<String> st, JButton btn2Eliminar){
-		Object informacion[][] = new String[listaEventos.size()][st.size()];
-		for(int x = 0; x < informacion.length; x++){
-			informacion[x][0] = listaEventos.get(x).getId() + "";
-			informacion[x][1] = btn2Eliminar;
-		}
-		return informacion;
-	}
    
+ 
+
+
+	
+    public void borrarEvento() throws SQLException {
+    	
+    		Conexion conexion = new Conexion();
+    		command = conexion.getcommand();
+    		int id = (int) tabla.getModel().getValueAt(tabla.getSelectedRow(), 0); // obtengo valor ID de la fila seleccionada
+    		Evento evento = new Evento(command,id);
+    		admin.eliminarEvento(evento);
+    		Mimodelo t = new Mimodelo();
+    		t.removeRow(tabla.getSelectedRow());// Elimina la fila que getSelectedRow() devuelve.
+    		JOptionPane.showMessageDialog(this, "Se ha eliminado el evento  el evento deportivo "+ evento.getId() +" correctamente","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
+    	   
+    	
+    }
+    
+    public void borrarUsuario(Persona persona)  {
+    	
+    		int id = (int) tabla1.getModel().getValueAt(tabla1.getSelectedRow(), 0);
+    		admin.eliminarUsuario(persona);
+    		Mimodelo2 t1 = new Mimodelo2();
+    		t1.removeRow(tabla1.getSelectedRow());// Elimina la fila que getSelectedRow() devuelve.
+    		JOptionPane.showMessageDialog(this, "Se ha eliminado el evento  el evento deportivo "+ persona.getId() +" correctamente","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
+    }
 	
 	//Metodo para rellenar los items del choice de deporte
 			private void cargarChoiceDeporte(Choice c) throws SQLException {
@@ -347,9 +384,26 @@ public class VentanaAdministrador extends JFrame  {
 	
 			}
 	
+			public void filtrarEvento() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void perfilUsuario() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void iniciarSesion() {
+				// TODO Auto-generated method stub
+				
+			}	
+			
 			public void cerrarVentana() {
 				this.dispose();
-			}	
+			}
+
+			
 			
 }
 

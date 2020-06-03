@@ -185,11 +185,11 @@ public class VentanaLogin extends JFrame {
 		
 	
 	
-	private void irVentanaAdmin(Usuario persona) {
+	private void irVentanaAdmin(Administrador persona) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaAdministrador frame = new VentanaAdministrador();
+					VentanaAdministrador frame = new VentanaAdministrador(persona);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

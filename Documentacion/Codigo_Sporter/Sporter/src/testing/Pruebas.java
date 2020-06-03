@@ -25,20 +25,16 @@ public class Pruebas {
 		command.execute("SET FOREIGN_KEY_CHECKS = 0;");
 		command.execute("TRUNCATE TABLE spoter.evento;");
 		command.execute("TRUNCATE TABLE spoter.usuarios;");
-		command.execute("TRUNCATE TABLE spoter.deporte;");
 		command.execute("TRUNCATE TABLE spoter.usuarios_has_deporte;");
 		command.execute("TRUNCATE TABLE spoter.usuarios_has_evento;");
 		command.execute("SET FOREIGN_KEY_CHECKS = 1;");
-		
-		command.execute("INSERT INTO `spoter`.`deporte` (`nombre`, `numParticipantes`) VALUES ('Baloncesto', '10');");
-		command.execute("INSERT INTO `spoter`.`deporte` (`nombre`, `numParticipantes`) VALUES ('Futbol', '10');");
-		command.execute("INSERT INTO `spoter`.`deporte` (`nombre`, `numParticipantes`) VALUES ('volley', '10');");
 	}
 	
-	// 	CrearPerfil:Se a�ade un usuario a la base de datos,
-	//				Se a�ade todo correctamente,
+	
 	@Test
 	public void CrearPerfilyModificar() throws SQLException {
+		
+//	 	CrearPerfil:Se aniade un usuario a la base de datos
 		
 		int numUsuarios;
 		ResultSet res = command.executeQuery("select count(*) from spoter.usuarios;");
@@ -47,11 +43,16 @@ public class Pruebas {
 		
 		Persona persona = new Persona(command);
 		
-		persona.crearPerfil("a", "a", "a", "a");
+		res = command.executeQuery("select nombre from spoter.deporte where idDeporte = 1;");
+		res.next();
+		String[] deportes = {res.getString(1)};
+		
+		persona.crearPerfil("a", "a", "a", "a", deportes);
 		
 		res = command.executeQuery("select count(*) from spoter.usuarios;");
 		res.next();
 		
+		//Se he sumado uno al numero de usuarios
 		assertEquals(res.getInt(1),numUsuarios+1);
 		
 		numUsuarios++;
@@ -59,6 +60,7 @@ public class Pruebas {
 		res = command.executeQuery("select * from spoter.usuarios where spoter.usuarios.idUsuarios = "+persona.getId()+";");
 		res.next();
 		
+		//Cada uno de los datos se guardan correctamente
 		assertEquals(res.getString(2),persona.getNombre());
 		assertEquals(res.getString(3),persona.getEmail());
 		assertEquals(res.getString(4), persona.getPassword());
@@ -66,25 +68,31 @@ public class Pruebas {
 		assertEquals(res.getString(6), persona.getLocalidad());
 		
 		Persona persona2 = new Persona(command);
-		persona2.crearPerfil("b", "b", "b", "b");
+		persona2.crearPerfil("b", "b", "b", "b", deportes);
 		
 		res = command.executeQuery("select count(*) from spoter.usuarios;");
 		res.next();
 		
+		//Se aumenta en uno si le metemos un segundo usuario el numero de usuarios
 		assertEquals(res.getInt(1),numUsuarios+1);
 		numUsuarios++;
 		
+		
 	//ModificarPerfil:	Se modifican los datos dados.
+		res = command.executeQuery("select nombre from spoter.deporte where idDeporte = 2;");
+		res.next();
+		String [] deportes2 = {res.getString(1)};
 		persona2 = new Persona(command,persona2.getId());
-		persona2.modificarPerfil("c", "d");
+		persona2.modificarPerfil("c", "d","e","f",deportes2);
 		
 		res = command.executeQuery("select nombre,localidad from spoter.usuarios where spoter.usuarios.idUsuarios = "+persona2.getId()+";");
 		res.next();
 		
+		//Comprobamos que los cambios se han ejecutado bien
 		assertEquals(res.getString(1), "c");
 		assertEquals(res.getString(2), "d");
 		
-	//Se A�ade deporte correctamente
+	//Se Aniade deporte correctamente
 		persona2.meterDeporte(1);
 		
 		res = command.executeQuery("select deporte_idDeporte from spoter.usuarios_has_deporte where spoter.usuarios_has_deporte.usuarios_idUsuarios = "+persona2.getId()+";");
@@ -92,16 +100,26 @@ public class Pruebas {
 		
 		assertEquals(res.getInt(1), 1);
 		
+		command.execute("SET FOREIGN_KEY_CHECKS = 0;");
+		command.execute("TRUNCATE TABLE spoter.usuarios;");
+		command.execute("SET FOREIGN_KEY_CHECKS = 1;");
 	}
+	
 	
 	@Test
 	public void FuncionesAdmin() throws SQLException {
 		int id = 0;
-		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES ('e', 'e', 'e', '1', 'e');");
-		ResultSet res = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios;");
-		while(res.next()) id = res.getInt(1);
+		//Creamos un administrador
+		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES ('a', 'a', 'a', '1', 'a');");
+		ResultSet res = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios order by idUsuarios desc;");
+		res.next();
+		
+		id = res.getInt(1);
+		
 		Administrador admin = new Administrador(command, id);
-		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES ('f', 'f', 'f', '0', 'f');");
+		
+		//Creamos un usuario normal
+		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES ('b', 'b', 'b', '0', 'b');");
 		Persona persona = new Persona(command,id+1);
 		
 		res = command.executeQuery("select count(*) from spoter.usuarios;");
@@ -113,12 +131,14 @@ public class Pruebas {
 		res = command.executeQuery("select count(*) from spoter.usuarios;");
 		res.next();
 		
+		//Al borrar un usuario hay una persona menos en la base de datos.
 		assertEquals(res.getInt(1), num-1);
 		
 		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('a', '10', '11/11/11', '1', '1');");
 		
-		res = command.executeQuery("SELECT id_Evento FROM spoter.evento;");
-		while(res.next()) id = res.getInt(1);
+		res = command.executeQuery("SELECT id_Evento FROM spoter.evento order by id_Evento desc;");
+		res.next();
+		id = res.getInt(1);
 		
 		res = command.executeQuery("select count(*) from spoter.evento;");
 		res.next();
@@ -130,20 +150,24 @@ public class Pruebas {
 		
 		res = command.executeQuery("select count(*) from spoter.evento;");
 		res.next();
-		
+		//Hay un elemento menos al borrar el evento.
 		assertEquals(res.getInt(1), num-1);
+		command.execute("SET FOREIGN_KEY_CHECKS = 0;");
+		command.execute("TRUNCATE TABLE spoter.usuarios;");
+		command.execute("SET FOREIGN_KEY_CHECKS = 1;");
 	}
 	
 	@Test
 	public void EventoGuardaBienEventos() throws SQLException {
-		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES ('h', 'h', 'h', '0', 'h');");
+		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES ('a', 'a', 'a', '0', 'a');");
 		int id = 0;
-		ResultSet res = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios;");
+		ResultSet res = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios orde by idUsuarios desc;");
 		
-		while(res.next()) id = res.getInt(1);
+		res.next();
+		id = res.getInt(1);
 		Persona persona  = new Persona(command, id);
 		
-		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('b', '10', '11/11/11', '"+id+"', '1');");
+		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('a', '10', '11/11/11', '"+id+"', '1');");
 		
 		
 		res = command.executeQuery("SELECT id_Evento FROM spoter.evento order by id_Evento desc;");
@@ -155,6 +179,8 @@ public class Pruebas {
 		res = command.executeQuery("Select * from spoter.evento where id_Evento = "+id+"");
 		res.next();
 		
+		
+		//Comprobamos que cige bien los datos
 		assertEquals(res.getInt(1), evento.getId());
 		assertEquals(res.getString(2), evento.getUbicacion());
 		assertEquals(res.getInt(3), evento.getNumeroParticipantes());
@@ -167,17 +193,23 @@ public class Pruebas {
 		res = command.executeQuery("Select * from spoter.evento where id_Evento = "+ evento.getId() +"");
 		res.next();
 		
+		//Comprobamos que mete bien los datos en la vase de datos
 		assertEquals(res.getInt(1), evento.getId());
 		assertEquals(res.getString(2), evento.getUbicacion());
 		assertEquals(res.getInt(3), evento.getNumeroParticipantes());
 		assertEquals(res.getString(4), evento.getFecha());
 		assertEquals(res.getInt(6), evento.getDeporte());
 		
+		command.execute("SET FOREIGN_KEY_CHECKS = 0;");
+		command.execute("TRUNCATE TABLE spoter.usuarios;");
+		command.execute("TRUNCATE TABLE spoter.evento;");
+		command.execute("SET FOREIGN_KEY_CHECKS = 1;");
+		
 	}
 	
 	@Test
 	public void BorrarEvento() throws SQLException {
-		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES ('i', 'i', 'i', '0', 'i');");
+		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES ('a', 'a', 'a', '0', 'a');");
 		
 		int id;
 		int Creador;
@@ -185,7 +217,7 @@ public class Pruebas {
 		res.next();
 		Creador = res.getInt(1);
 		
-		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('m', '10', '11/11/11', '"+Creador+"', '1');");
+		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('b', '10', '11/11/11', '"+Creador+"', '1');");
 		
 		res = command.executeQuery("SELECT id_Evento FROM spoter.evento order by id_Evento desc;");
 		res.next();
@@ -206,9 +238,55 @@ public class Pruebas {
 		res.next();
 		
 		assertEquals(res.getInt(1), numero-1);
-	}
-	@Test
-	public void UnirseEvento() {
 		
+		command.execute("SET FOREIGN_KEY_CHECKS = 0;");
+		command.execute("TRUNCATE TABLE spoter.usuarios;");
+		command.execute("TRUNCATE TABLE spoter.evento;");
+		command.execute("SET FOREIGN_KEY_CHECKS = 1;");
+	}
+	
+	@Test
+	public void UnirseyDejarEvento() throws SQLException {
+		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES ('a', 'a', 'a', '0', 'a');");
+		
+		int id;
+		int Creador;
+		ResultSet res = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios order by idUsuarios desc;");
+		res.next();
+		Creador = res.getInt(1);
+		
+		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('b', '10', '11/11/11', '"+Creador+"', '1');");
+		
+		res = command.executeQuery("SELECT id_Evento FROM spoter.evento order by id_Evento desc;");
+		res.next();
+		id = res.getInt(1);
+		
+		Evento evento = new Evento(command, id);
+		Persona persona = new Persona(command,Creador);
+		
+		res = command.executeQuery("SELECT Count(*) FROM spoter.usuario_has_evento where evento_id_Evento = "+id+";");
+		res.next();
+		int numero = res.getInt(1);
+		
+		evento.unirse(persona);
+		
+		res = command.executeQuery("SELECT Count(*) FROM spoter.usuario_has_evento where evento_id_Evento = "+id+";");
+		res.next();
+		
+		//Se ha aumentado en uno el numero de participantes en este evento
+		assertEquals(res.getInt(1), numero + 1 );
+		numero++;
+		
+		evento.dejarEvento(persona);
+		
+		res = command.executeQuery("SELECT Count(*) FROM spoter.usuario_has_evento where evento_id_Evento = "+id+";");
+		res.next();
+		
+		assertEquals(res.getInt(1), numero - 1);
+		
+		command.execute("SET FOREIGN_KEY_CHECKS = 0;");
+		command.execute("TRUNCATE TABLE spoter.usuarios;");
+		command.execute("TRUNCATE TABLE spoter.evento;");
+		command.execute("SET FOREIGN_KEY_CHECKS = 1;");
 	}
 }

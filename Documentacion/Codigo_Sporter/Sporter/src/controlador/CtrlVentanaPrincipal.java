@@ -21,11 +21,12 @@ public class CtrlVentanaPrincipal implements ActionListener{
 		String comando = e.getActionCommand();
 		
 		if(comando.equals("Cerrar Sesion")) {
-			System.out.println("Cerrar Sesion");
+			System.out.println("Sesion Cerrada");
 			ventana.cerrarSesion();
 		}else if(comando.equals("Crear Evento")) {
-			System.out.println("Crear Evento");
 			ventana.crearEvento(persona);
+		}else if(comando.equals("Perfil Usuario")) {
+			ventana.verVentanaUsuario(persona);
 		}
 	}
 }

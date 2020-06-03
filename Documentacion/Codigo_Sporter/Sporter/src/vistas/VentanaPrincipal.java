@@ -13,6 +13,7 @@ import colores.Colores;
 import conexion.Conexion;
 import controlador.CtrlVentanaCrearEvento;
 import controlador.CtrlVentanaLogin;
+import controlador.CtrlVentanaPerfilUsuario;
 import imagenes.Imagenes;
 import modelo.*;
 import render.Render;
@@ -25,10 +26,9 @@ public class VentanaPrincipal extends JFrame {
 	private JTable tablaEventos;
 	protected static Statement command;
 	private ArrayList<Evento> listaEventos;
-	private Persona persona;
 	private static Colores colores = new Colores();
 	private Imagenes imagenes = new Imagenes();
-	private JButton btnCerrarSesion, btnCrearEvento, btnBuscar;
+	private JButton btnCerrarSesion, btnCrearEvento, btnBuscar, lblUsuario;
 	private DefaultTableModel modelo = new DefaultTableModel();
 	
 	/**
@@ -95,9 +95,11 @@ public class VentanaPrincipal extends JFrame {
 		textField_1.setBounds(360, 58, 90, 20);
 		textField_1.setColumns(10);
 		
-		JLabel lblUsuario = new JLabel(persona.getNombre());
+		lblUsuario = new JButton(persona.getNombre());
 		lblUsuario.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblUsuario.setBounds(230, 20, 216, 14);
+		lblUsuario.setBackground(null);
+		lblUsuario.setBorderPainted(false);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(34, 86, 516, 457);
@@ -163,6 +165,9 @@ public class VentanaPrincipal extends JFrame {
 		
 		btnCrearEvento.addActionListener(ctrl);
 		btnCrearEvento.setActionCommand("Crear Evento");
+		
+		lblUsuario.addActionListener(ctrl);
+		lblUsuario.setActionCommand("Perfil Usuario");
 	}
 	public void cerrarSesion() {
 		EventQueue.invokeLater(new Runnable() {
@@ -192,6 +197,23 @@ public class VentanaPrincipal extends JFrame {
 					vista.controlVentana(ctrl); // Segundo: el metodo de la vista controlador le metes el controlador anteriormente creado
 					vista.controlChoise(ctrl);
 					vista.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	public void verVentanaUsuario(Persona persona) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Conexion conexion = new Conexion();
+					command = conexion.getcommand();
+					VentanaPerfilUsuario frame = new VentanaPerfilUsuario(persona);
+					CtrlVentanaPerfilUsuario ctrl = new CtrlVentanaPerfilUsuario(frame);
+					frame.controladorVista(ctrl);
+					frame.controladorBotonesTable(ctrl);
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

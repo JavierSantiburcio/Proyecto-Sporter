@@ -128,7 +128,8 @@ public class Evento {
 		command.execute("INSERT INTO `spoter`.`usuarios_has_evento` (`usuarios_idUsuarios`, `evento_id_Evento`) VALUES ('"
 						+ persona.getId() + "', '" + id + "');");
 	}
-
+	
+	//Poner deporte -1 si no se quiere modificar
 	public void modificar_evento(int usuario, String ubicacion, String fecha, int deporte) throws SQLException {
 		if (organiza == usuario) {
 			if (ubicacion != null)

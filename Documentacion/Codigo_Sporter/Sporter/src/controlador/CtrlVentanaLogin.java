@@ -24,7 +24,6 @@ public class CtrlVentanaLogin implements ActionListener{
 		
 		if(comando.equals("INICIAR SESION")) {
 			try {
-				System.out.println("INICIAR SESION");
 				ventana.iniciarSesion();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block

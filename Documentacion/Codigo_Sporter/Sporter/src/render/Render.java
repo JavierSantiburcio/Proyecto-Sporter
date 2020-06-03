@@ -1,3 +1,5 @@
+// Autor; Jose Luis Gonzalez Ramirez
+
 package render;
 
 import java.awt.Component;

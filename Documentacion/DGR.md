@@ -77,7 +77,7 @@ Las funciones principales que 'Sporter' llevará a cabo serán:
 
 Diagrama de casos de uso:
 
-![DiagramaCasosDeUso](https://github.com/JavierSantiburcio/Proyecto-Sporter/blob/master/Documentacion/ImagenDiagramaCasosDeUso.png)
+![DiagramaCasosDeUso](https://github.com/JavierSantiburcio/Proyecto-Sporter/blob/master/Documentacion/Imagenes/ImagenDiagramaCasosDeUso.png)
 
 ### 2.3 Restricciones del producto
 
@@ -115,7 +115,7 @@ Nuestra aplicación necesitará una interfaz de usuario. Esta interfaz contará 
 * Si el usuario es el administrador, la pantalla principal constará de dos tablas que contendrán todos los eventos y perfiles dados de alta en la aplicación que le permitirá administrar la eliminación de eventos y/o perfiles de usuarios.
 
 * Borrador de las interfaces de usuario:
-![Borrardor](https://github.com/JavierSantiburcio/Proyecto-Sporter/blob/master/Documentacion/Borrador_Sporter.png)
+![Borrardor](https://github.com/JavierSantiburcio/Proyecto-Sporter/blob/master/Documentacion/Imagenes/Borrador_Sporter.png)
 
 
 #### 3.3 Interfaces con el Software

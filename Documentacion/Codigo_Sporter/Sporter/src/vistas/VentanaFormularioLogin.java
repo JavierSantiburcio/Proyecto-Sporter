@@ -14,6 +14,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import java.sql.*;
+import java.util.Arrays;
 
 import javax.swing.JPasswordField;
 import javax.swing.JList;
@@ -52,10 +53,15 @@ public class VentanaFormularioLogin extends JFrame {
 	private Choice choice_ubi;
 	private JButton button_cancelar, button_crear;
 	private Statement comando = new Conexion().getcommand();
-
+	static final int MAX_TAM = 20;
+	private String [] lDeportes = new String[MAX_TAM];
+	private int nDeportes = 0;
+	private String localizacion;
+	private Persona persona;
+	private boolean modificar;
 	/**
 	 * Launch the application.
-	 */
+	 *
 	 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -75,7 +81,11 @@ public class VentanaFormularioLogin extends JFrame {
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
-	public VentanaFormularioLogin() throws SQLException {
+	public VentanaFormularioLogin(Persona persona, boolean modificar) throws SQLException{
+		//this.persona = new Persona(comando, "jiji"); -----------PARA PRUEBAS
+		//this.modificar = true;
+		this.persona = persona; 
+		this.modificar = modificar;
 		
 		setTitle("Sporter");
 		setIconImage(imagenes.getLogo_sin_nombreEscalado(16, 16));
@@ -94,12 +104,15 @@ public class VentanaFormularioLogin extends JFrame {
 		panel.setBounds(74, 24, 373, 51);
 		panel.setBackground(colores.getVerde());
 		contentPane.add(panel);
+		panel.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Nombre de usuario:");
+		lblNewLabel.setBounds(94, 8, 94, 14);
 		lblNewLabel.setForeground(colores.getAmarillo());
 		panel.add(lblNewLabel);
 		
-		textUsr = new JTextField();
+		textUsr = new JTextField(persona.getNombre());
+		textUsr.setBounds(193, 5, 86, 20);
 		panel.add(textUsr);
 		textUsr.setColumns(10);
 		
@@ -115,7 +128,7 @@ public class VentanaFormularioLogin extends JFrame {
 		lblNewLabel_1.setForeground(colores.getAmarillo());
 		panel_1.add(lblNewLabel_1);
 		
-		textEmail = new JTextField();
+		textEmail = new JTextField(persona.getEmail());
 		panel_1.add(textEmail);
 		textEmail.setColumns(10);
 		
@@ -129,13 +142,14 @@ public class VentanaFormularioLogin extends JFrame {
 		lblNewLabel_1_1.setForeground(colores.getAmarillo());
 		panel_1_1.add(lblNewLabel_1_1);
 		
-		passwordField = new JPasswordField();
+		passwordField = new JPasswordField(persona.getPassword());
 		panel_1_1.add(passwordField);
 		passwordField.setColumns(10);
 		
-		// Panel para la etiqueta y la selección de DEPORTES
+		
+		// Panel para la etiqueta y la selecciÃ³n de DEPORTES
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(74, 213, 373, 51);
+		panel_2.setBounds(74, 213, 373, 99);
 		panel_2.setBackground(colores.getVerde());
 		contentPane.add(panel_2);
 		
@@ -143,22 +157,22 @@ public class VentanaFormularioLogin extends JFrame {
 		lblNewLabel_2.setForeground(colores.getAmarillo());
 		panel_2.add(lblNewLabel_2);
 		
-		choice_ubi = new Choice();
-		panel_2.add(choice_ubi);
+		listDeportes = new java.awt.List(5, true);
+		listDeportes.setMultipleMode(true);
+		panel_2.add(listDeportes);
 		
-		// Panel para la etiqueta y la selección de LOCALIZACION
+		// Panel para la etiqueta y la selecciÃ³n de LOCALIZACION
 		JPanel panel_2_1 = new JPanel();
-		panel_2_1.setBounds(74, 276, 373, 99);
+		panel_2_1.setBounds(74, 324, 373, 51);
 		panel_2_1.setBackground(colores.getVerde());
 		contentPane.add(panel_2_1);
 		
-		JLabel lblNewLabel_2_1 = new JLabel("Localización:");
+		JLabel lblNewLabel_2_1 = new JLabel("LocalizaciÃ³n:");
 		lblNewLabel_2_1.setForeground(colores.getAmarillo());
 		panel_2_1.add(lblNewLabel_2_1);
 		
-		listDeportes = new java.awt.List();
-		listDeportes.setMultipleMode(true);
-		panel_2_1.add(listDeportes);
+		choice_ubi = new Choice();
+		panel_2_1.add(choice_ubi);
 		
 		
 		// Panel para los botones
@@ -175,12 +189,16 @@ public class VentanaFormularioLogin extends JFrame {
 		button_crear.setBackground(colores.getNaranja());
 		panel_2_1_1.add(button_crear);
 		
-		cargarChoiceLocalizacion(choice_ubi);
-		cargarListaDeportes(listDeportes);
+		if(modificar) {
+			cargarChoiceLocalizacionMod(choice_ubi);
+			cargarListaDeportesMod(listDeportes);
+		}else {
+			cargarChoiceLocalizacion(choice_ubi);
+			cargarListaDeportes(listDeportes);			
+		}
 	}
 	
 	// Controladores
-	
 	public void controlVentana(ActionListener ctrl) {
 		button_crear.addActionListener(ctrl);
 		button_crear.setActionCommand("CREAR");
@@ -189,6 +207,32 @@ public class VentanaFormularioLogin extends JFrame {
 		button_cancelar.setActionCommand("CANCELAR");
 	}
 	
+	public void controlChoiceList(ItemListener ctrl) {
+		listDeportes.addItemListener(ctrl);
+		choice_ubi.addItemListener(ctrl);
+	}
+	
+	// Getters para el cotrolador
+	public java.awt.List getlistDeportes() {
+		return listDeportes;
+	}
+	
+	public Choice getChoiceUbi() {
+		return choice_ubi;
+	}
+	
+	// Seters para el controlador
+	public void addDeportes(String deporte) {
+		if(nDeportes + 1 == MAX_TAM) {
+			lDeportes = Arrays.copyOf(lDeportes, MAX_TAM * 2);
+		}
+		lDeportes [nDeportes + 1] = deporte;
+		nDeportes++;
+	}
+	
+	public void setLocalizacion(String localizacion2) {
+		localizacion = localizacion2;
+	}
 	
 	// Cargamos las listas
 	private void cargarChoiceLocalizacion(Choice choice_ubi2) {
@@ -211,21 +255,77 @@ public class VentanaFormularioLogin extends JFrame {
 		
 	}
 	
+	private void cargarChoiceLocalizacionMod(Choice choice_ubi) {
+		Ubicacion ub = new Ubicacion();
+		java.util.List<String> listUbicacion = ub.getListUbicacion();
+//		listUbicacion.remove(persona.getLocalidad());
+		
+		choice_ubi.add(persona.getLocalidad());
+		for(String item : listUbicacion) {
+				choice_ubi.add(item);
+		}
+	}
+	
+	private void cargarListaDeportesMod(List listDeportes) throws SQLException {
+		Deporte depo = new Deporte(comando);
+		java.util.List<String> listDepo =  depo.obtenerListaDeporte();
+		
+		for(String item : listDepo) {
+			listDeportes.add(item);
+		}
+		
+		for(int i = 0; i < listDepo.size(); i++) {
+			if(estaEnPersona(listDeportes.getItem(i), persona)) {
+				listDeportes.select(i);
+			}
+		}
+		
+	}
+	
+	private boolean estaEnPersona(String deporte, Persona persona) throws SQLException {
+		boolean esta = false;
+		int i = 0; 
+		java.util.List<String> deportes = persona.getListDeporte();
+		while(i < deportes.size() && !esta) {
+			if(deportes.get(i).compareTo(deporte) == 0) {
+				esta = true;
+			}else {
+				i++;
+			}
+		}
+		
+		return esta;
+	}
+	
 	// Metodo encargado de crear el perfil de usuario en la base de datos
 	
 	public void crearPerfil() throws SQLException {
 		String usr = textUsr.getText();
 		String email = textEmail.getText();
-		String password = passwordField.getSelectedText();
-		String localidad = choice_ubi.getSelectedItem();
-		String [] lDeportes = listDeportes.getSelectedItems();
-		
-		for(String str : lDeportes) {
-			System.out.println(str);
-		}
-		
+		localizacion = choice_ubi.getSelectedItem();
+		@SuppressWarnings("deprecation")
+		String password = passwordField.getText();
 		Persona persona = new Persona(comando);  
-		persona.crearPerfil(usr, localidad, email, password, lDeportes);
+		String [] deportes = listDeportes.getSelectedItems();
+		
+		persona.crearPerfil(usr, localizacion, email, password, deportes);
+		
+		this.cerrarVentana();
+	}
+	
+	
+    // Metodo encargado de modificar el perfil de un usario 
+	
+	public void modificarPerfil() throws SQLException {
+		String usr = textUsr.getText();
+		String email = textEmail.getText();
+		localizacion = choice_ubi.getSelectedItem();
+		@SuppressWarnings("deprecation")
+		String password = passwordField.getText();
+		Persona persona = new Persona(comando);
+		String [] deportes = listDeportes.getSelectedItems();
+		
+		persona.modificarPerfil(usr, localizacion, email, password, deportes); 
 		
 		this.cerrarVentana();
 	}
@@ -233,4 +333,6 @@ public class VentanaFormularioLogin extends JFrame {
 	public void cerrarVentana() {
 		this.dispose();
 	}
+
+	
 }

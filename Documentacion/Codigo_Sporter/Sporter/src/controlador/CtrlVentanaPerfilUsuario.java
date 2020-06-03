@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 import javax.swing.JButton;
 
+import vistas.VentanaFormularioLogin;
 import vistas.VentanaPerfilUsuario;
 
 public class CtrlVentanaPerfilUsuario implements ActionListener, MouseListener{
@@ -31,9 +32,8 @@ public class CtrlVentanaPerfilUsuario implements ActionListener, MouseListener{
 		switch (comando) {
 		case "MODIFICAR":
 			try {
-				
+				vista.nuevaVentana();
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			break;
@@ -48,6 +48,7 @@ public class CtrlVentanaPerfilUsuario implements ActionListener, MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent evt) {
+		
 		int column = vista.table.getColumnModel().getColumnIndexAtX(evt.getX()); // posicion x de la columna cuando hacemos click
 		int row = evt.getY() / vista.table.getRowHeight(); // fila
 		

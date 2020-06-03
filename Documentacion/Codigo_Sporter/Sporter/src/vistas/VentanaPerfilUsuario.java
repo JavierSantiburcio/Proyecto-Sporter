@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 import colores.Colores;
 import conexion.Conexion;
+import controlador.CtrlVentanaFrmLogin;
 import controlador.CtrlVentanaPerfilUsuario;
 import imagenes.Imagenes;
 import modelo.Evento;
@@ -23,6 +24,7 @@ import render.Render;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
@@ -33,6 +35,8 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.JList;
+import java.awt.Choice;
 
 
 public class VentanaPerfilUsuario extends JFrame{
@@ -42,7 +46,7 @@ public class VentanaPerfilUsuario extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	JLabel lbl_Icono, lbl_NombreUsuario, lblLocalidad, lblDeporte,lblEmail,lbl_InfoLocalidad,lbl_InfoDeporte,lbl_InfoEmail,lblHistorial;
+	JLabel lbl_Icono, lbl_NombreUsuario, lblLocalidad, lblDeporte,lblEmail,lbl_InfoLocalidad,lbl_InfoEmail,lblHistorial;
 	private static Persona persona;
 	protected static Statement command;
 	private static Colores colores = new Colores();
@@ -51,7 +55,8 @@ public class VentanaPerfilUsuario extends JFrame{
 	private JButton btn_ModificarPerfil, btnReturn,btnCancelar,btnSalir;
 	private DefaultTableModel modeloTabla;
 	private JLabel lblNewLabel;
-
+	private Choice choiceDeportes;
+	private java.awt.List list;
 	/**
 	 * Launch the application.
 	 */
@@ -98,11 +103,11 @@ public class VentanaPerfilUsuario extends JFrame{
 		contentPane.add(lbl_Icono);
 		
 		lbl_NombreUsuario = new JLabel();
-		lbl_NombreUsuario.setBounds(64, 11, 363, 23);
+		lbl_NombreUsuario.setBounds(64, 11, 241, 23);
 		contentPane.add(lbl_NombreUsuario);
 		
 		btn_ModificarPerfil = new JButton("Modificar Perfil");
-		btn_ModificarPerfil.setBounds(773, 11, 143, 23);
+		btn_ModificarPerfil.setBounds(788, 11, 143, 23);
 		btn_ModificarPerfil.setBackground(colores.getNaranja());
 		contentPane.add(btn_ModificarPerfil);
 		
@@ -111,42 +116,40 @@ public class VentanaPerfilUsuario extends JFrame{
 		contentPane.add(separator);
 		
 		lblLocalidad = new JLabel("Localidad:");
-		lblLocalidad.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblLocalidad.setBounds(10, 85, 65, 14);
+		lblLocalidad.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblLocalidad.setBounds(10, 81, 65, 23);
 		lblLocalidad.setForeground(colores.getAmarillo());
 		contentPane.add(lblLocalidad);
 		
-		lblDeporte = new JLabel("Deporte:");
-		lblDeporte.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblDeporte.setBounds(188, 85, 57, 14);
+		lblDeporte = new JLabel("Deportes:");
+		lblDeporte.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblDeporte.setBounds(301, 81, 72, 23);
 		lblDeporte.setForeground(colores.getAmarillo());
 		contentPane.add(lblDeporte);
 		
+		choiceDeportes = new Choice();
+		choiceDeportes.setFont(new Font("Dialog", Font.BOLD, 12));
+		choiceDeportes.setBounds(379, 81, 205, 23);
+		contentPane.add(choiceDeportes);
+		
 		lblEmail = new JLabel("Email:");
-		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblEmail.setBounds(373, 85, 35, 14);
+		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblEmail.setBounds(661, 81, 45, 23);
 		lblEmail.setForeground(colores.getAmarillo());
 		contentPane.add(lblEmail);
 		
 		lbl_InfoLocalidad = new JLabel("New label");
-		lbl_InfoLocalidad.setVerticalAlignment(SwingConstants.TOP);
-		lbl_InfoLocalidad.setBounds(81, 85, 101, 23);
+		lbl_InfoLocalidad.setBounds(85, 81, 108, 23);
 		contentPane.add(lbl_InfoLocalidad);
 		
-		lbl_InfoDeporte = new JLabel("New label");
-		lbl_InfoDeporte.setVerticalAlignment(SwingConstants.TOP);
-		lbl_InfoDeporte.setBounds(259, 85, 108, 23);
-		contentPane.add(lbl_InfoDeporte);
-		
 		lbl_InfoEmail = new JLabel("New label");
-		lbl_InfoEmail.setVerticalAlignment(SwingConstants.TOP);
-		lbl_InfoEmail.setBounds(418, 85, 215, 23);
+		lbl_InfoEmail.setBounds(716, 81, 215, 23);
 		contentPane.add(lbl_InfoEmail);
 		
 		lblHistorial = new JLabel("Historial de Eventos");
 		lblHistorial.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblHistorial.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHistorial.setBounds(24, 123, 909, 14);
+		lblHistorial.setBounds(24, 153, 909, 14);
 		lblHistorial.setForeground(colores.getAmarillo());
 		contentPane.add(lblHistorial);
 		
@@ -156,7 +159,7 @@ public class VentanaPerfilUsuario extends JFrame{
 		btnSalir = new JButton("Salir");
 		btnSalir.setName("s");
 		
-		String t[] ={"N�","FECHA","HORA","PROPIETARIO","DEPORTE","UBICACI�N","N� PARTICIPANTES",""}; //Almaceno las columnas en el DefaultTableModel y hago que no sean editable las celdas
+		String t[] ={"Nº","FECHA","HORA","PROPIETARIO","DEPORTE","UBICACIÓN","NºPARTICIPANTES",""}; //Almaceno las columnas en el DefaultTableModel y hago que no sean editable las celdas
 		modeloTabla = new DefaultTableModel(null,t){
 	
 			private static final long serialVersionUID = 1L;
@@ -183,23 +186,29 @@ public class VentanaPerfilUsuario extends JFrame{
 		table.getColumnModel().getColumn(6).setMaxWidth(350); 
 		table.getColumnModel().getColumn(7).setMaxWidth(200); 
 		table.setDefaultRenderer(Object.class, new Render()); // Para centrar valores de las celdas
-		//table.addMouseListener(this);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setBounds(24, 148, 909, 197);
+		scrollPane_1.setBounds(24, 178, 909, 197);
 		scrollPane_1.setViewportView(table);
 		contentPane.add(scrollPane_1);
 		
-		btnReturn = new JButton("Volver al tabl\u00F3n");
-		btnReturn.setBounds(424, 400, 145, 23);
+		btnReturn = new JButton("Volver al tablón");
+		btnReturn.setBounds(379, 400, 205, 23);
 		btnReturn.setBackground(colores.getNaranja());
 		contentPane.add(btnReturn);
 		
 		lblNewLabel = new JLabel("Datos Usuario");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 13));
-		lblNewLabel.setBounds(10, 60, 108, 14);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
+		lblNewLabel.setBounds(10, 56, 954, 14);
+		lblNewLabel.setForeground(colores.getAmarillo());
 		contentPane.add(lblNewLabel);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setBounds(0, 110, 954, 9);
+		contentPane.add(separator_1);
+		
 		
 		cargarDatosLabel();
 		generarContenidoTabla();
@@ -237,8 +246,12 @@ public class VentanaPerfilUsuario extends JFrame{
 	public void cargarDatosLabel() throws SQLException {
 		lbl_NombreUsuario.setText(persona.getNombre());
 		lbl_InfoLocalidad.setText(persona.getLocalidad());
-		lbl_InfoDeporte.setText(persona.getDeporte());
 		lbl_InfoEmail.setText(persona.getEmail());
+		
+		for(String item : persona.getListDeporte()) {
+			choiceDeportes.add(item);
+		}
+		             
 	}
 	
 	//METODO QUE GENERA EL CONTENIDO DE LA TABLA CUANDO SE INICIA LA VISTA
@@ -288,7 +301,6 @@ public class VentanaPerfilUsuario extends JFrame{
 		for(int i = num; i>=0;i--) {
 			modeloTabla.removeRow(i);
 		}
-		
 	}
 
 	public void cancelarEvento() throws Exception {
@@ -310,4 +322,13 @@ public class VentanaPerfilUsuario extends JFrame{
 		modeloTabla.removeRow(table.getSelectedRow());// Elimina la fila que getSelectedRow() devuelve.
 		JOptionPane.showMessageDialog(this, "Has abandonado el evento deportivo "+ evento.getId() +" correctamente","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
 	}
+
+	//Daniel: Navegación a la ventana del formulario de modificar perfil de Javi
+	public void nuevaVentana() throws SQLException {
+		VentanaFormularioLogin nuevaVentana = new VentanaFormularioLogin(persona, true);
+		CtrlVentanaFrmLogin ctrl = new CtrlVentanaFrmLogin(nuevaVentana, true);
+		nuevaVentana.controlVentana(ctrl);
+		nuevaVentana.setVisible(true);
+	}
+//----------------------------------------------------------------- FIN  METODOS AUXILIARES ---------------------------------------------------------------------------//	
 }

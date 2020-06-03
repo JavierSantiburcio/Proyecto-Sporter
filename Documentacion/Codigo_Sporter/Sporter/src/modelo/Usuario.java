@@ -49,4 +49,6 @@ public class Usuario {
 	public boolean getAdmin() {
 		return admin;
 	}
+	
+	
 }

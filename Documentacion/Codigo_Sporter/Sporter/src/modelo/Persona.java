@@ -1,8 +1,9 @@
-package modelo;
+ package modelo;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Persona extends Usuario{
 	
@@ -65,10 +66,15 @@ public class Persona extends Usuario{
 		return localidad;
 	}
 	
-	public void modificarPerfil(String nombre,String localidad) throws SQLException {
+	public void modificarPerfil(String nombre, String localidad, String email, String password, String [] deportes) throws SQLException {
 		if(!existente) throw new RuntimeException("Un usuario que no existe no se modifica");
 		
-		command.execute("UPDATE `spoter`.`usuarios` SET `nombre` = '"+nombre+"', `localidad` = '"+localidad+"' WHERE (`idUsuarios` = "+id+");");
+		command.execute("UPDATE `spoter`.`usuarios` SET `nombre` = '"+nombre+"', `localidad` = '"+localidad+"',`password` = '"+ password +"' WHERE (`email` = '"+email+"');");
+		
+		Deporte deporte = new Deporte(command);
+		for(String nombre1 : deportes) {
+			this.meterDeporte(deporte.obtenerIdDeporte(nombre1));
+		}
 		
 	}
 	
@@ -88,10 +94,11 @@ public class Persona extends Usuario{
 		
 		// Javier: Aniade deportes al perfil recibiendo como parámetro un array
 		Deporte deporte = new Deporte(command);
-		
 		for(String nombre1 : deportes) {
 			this.meterDeporte(deporte.obtenerIdDeporte(nombre1));
 		}
+		
+		System.out.println("/nPERFIL CREADO");
 		 
 	}
 	
@@ -102,20 +109,21 @@ public class Persona extends Usuario{
 		practica.add(deporte);
 	}
 	
-	// Daniel Cuevas: obtener el deporter que practica el usuario. Necesario en el perfil de usuario
-	public String getDeporte() throws SQLException {
-		ResultSet data1, data2;
-		data1 = command.executeQuery("SELECT * FROM spoter.usuarios_has_deporte WHERE usuarios_idUsuarios = " + id + ";");
-		data1.next();
-		int idDeporte = data1.getInt(2);
-
-		data2 = command.executeQuery("SELECT nombre FROM spoter.deporte WHERE idDeporte = " + idDeporte + ";");
-		data2.next();
-		return data2.getString(1);
+	// Daniel Cuevas: obtener una lista con los nombres de los deportes que practica un usuario. Necesario en el perfil de usuario
+	public List<String> getListDeporte() throws SQLException {
+		ResultSet data;
+		List<String> listDeportes = new ArrayList<String>();
+		data = command.executeQuery("SELECT nombre FROM spoter.deporte D "
+				+ "INNER JOIN spoter.usuarios_has_deporte UD ON UD.usuarios_idUsuarios = "+ this.id +" && D.idDeporte = UD.deporte_idDeporte;");
+		while(data.next()) {
+				listDeportes.add(data.getString(1));
+		}
+		
+		return listDeportes;
 	}
 	
 	
-	// Javier: Comprueba si la contraseña recibida como parametro 
+	// Javier: Comprueba si la contraseña recibida como parametro es correcta
 	public boolean confirmarContrasenia(String contrasenia) throws SQLException {
 		boolean correcta = false;
 		ResultSet data = command.executeQuery("Select password from spoter.usuarios user where user.idUsuarios ="+ id +";");

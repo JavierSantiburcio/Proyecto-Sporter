@@ -14,9 +14,12 @@ import java.sql.Statement;
 
 import colores.Colores;
 import conexion.Conexion;
+import controlador.CtrlVentanaFrmLogin;
 import controlador.CtrlVentanaLogin;
 import imagenes.Imagenes;
+import modelo.Administrador;
 import modelo.Persona;
+import modelo.Usuario;
 
 public class VentanaLogin extends JFrame {
 	private static Colores colores = new Colores();
@@ -85,7 +88,9 @@ public class VentanaLogin extends JFrame {
 		field_usuario.setColumns(10);
 		
 		// Campos Contrasenia
-		JLabel lblNewLabel_1 = new JLabel("Contraseña:");
+		char enie = 'ñ';
+		char n = '\u0241';
+		JLabel lblNewLabel_1 = new JLabel("Contrase"+ enie +"a:");
 		lblNewLabel_1.setBounds(0, 43, 93, 16);
 		panel_1.add(lblNewLabel_1);
 		lblNewLabel_1.setForeground(colores.getAmarillo());
@@ -145,7 +150,6 @@ public class VentanaLogin extends JFrame {
 		boton_crearUsuario.setActionCommand("CREAR USUARIO");
 	}
 	
-	
 	// 
 	@SuppressWarnings("deprecation")
 	public void iniciarSesion() throws SQLException {
@@ -155,23 +159,44 @@ public class VentanaLogin extends JFrame {
 		try {
 			Persona persona = new Persona(command, field_usuario.getText());
 			if(persona.getExistente()) {
-				System.out.println("EXISTE");
-				if(persona.confirmarContrasenia(field_contrasenia.getText())) {
-					sesion = true;
-					irVentanaPrincipal(persona);
-				}else {
-					error = true;
-				}
+					if(persona.confirmarContrasenia(field_contrasenia.getText())) {
+						sesion = true;
+						irVentanaPrincipal(persona);
+					}else {
+						JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos","Atención", JOptionPane.WARNING_MESSAGE, null);
+					}
 			}else {
-				error = true;
+				JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos","Atención", JOptionPane.WARNING_MESSAGE, null);
 			}
 		}catch(RuntimeException e) {
-			error = true;
-			throw new RuntimeException(e);
+			Administrador administrador = new Administrador(command, field_usuario.getText());
+			if(administrador.confirmarContrasenia(field_contrasenia.getText())) {
+				sesion = true;
+				irVentanaAdmin(administrador);
+			}else {
+				JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos","Atención", JOptionPane.WARNING_MESSAGE, null);
+			}
+		}catch(SQLException e1) {
+			JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos","Atención", JOptionPane.WARNING_MESSAGE, null);
 		}
-		
+			
 	}
+		
 	
+	
+	private void irVentanaAdmin(Usuario persona) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaAdministrador frame = new VentanaAdministrador();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
 	private void irVentanaPrincipal(Persona persona) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -189,7 +214,10 @@ public class VentanaLogin extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaFormularioLogin frame = new VentanaFormularioLogin();
+					Persona persona = null;
+					VentanaFormularioLogin frame = new VentanaFormularioLogin(persona, false);
+					CtrlVentanaFrmLogin ctrl = new CtrlVentanaFrmLogin(frame, false);
+					frame.controlVentana(ctrl);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

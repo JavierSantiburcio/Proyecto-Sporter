@@ -1,4 +1,4 @@
-// Autor : Daniel Cuevas P�rez - Ventana formulario crear evento
+// Autor : Daniel Cuevas Pérez - Ventana formulario crear evento
 
 package vistas;
 
@@ -98,7 +98,7 @@ public class VentanaFrmCrearEvento extends JFrame {
 		lblDeporte.setForeground(colores.getAmarillo());
 		contentPane.add(lblDeporte);
 		
-		lblUbicacion = new JLabel("UBICACI�N");
+		lblUbicacion = new JLabel("UBICACIÓN");
 		lblUbicacion.setBounds(33, 140, 236, 14);
 		lblUbicacion.setForeground(colores.getAmarillo());
 		contentPane.add(lblUbicacion);
@@ -125,7 +125,7 @@ public class VentanaFrmCrearEvento extends JFrame {
 		textField_Hora.setBounds(33, 280, 342, 20);
 		contentPane.add(textField_Hora);
 		
-		lblNumeroParticipantes = new JLabel("N\u00BAJUGADORES");
+		lblNumeroParticipantes = new JLabel("NºJUGADORES");
 		lblNumeroParticipantes.setBounds(285, 80, 90, 14);
 		lblNumeroParticipantes.setForeground(colores.getAmarillo());
 		contentPane.add(lblNumeroParticipantes);
@@ -198,9 +198,9 @@ public class VentanaFrmCrearEvento extends JFrame {
 			String fechaHora = fecha + " " + hora;
 			int numParticipantes = Integer.parseInt(textField_numPart.getText());
 			if(fecha.equals("")) {
-				JOptionPane.showMessageDialog(this, "Campo Fecha vac�o.","ERROR", JOptionPane.ERROR_MESSAGE, null);
+				JOptionPane.showMessageDialog(this, "Campo Fecha vacío.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
 			}else if(hora.equals("")){
-				JOptionPane.showMessageDialog(this, "Campo Hora vac�o.","ERROR", JOptionPane.ERROR_MESSAGE, null);
+				JOptionPane.showMessageDialog(this, "Campo Hora vacío.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
 			}else {
 				Evento evento = new Evento(command);
 				evento.crearEvento(persona, idDeporte, ubicacion, fechaHora, numParticipantes);
@@ -244,4 +244,7 @@ public class VentanaFrmCrearEvento extends JFrame {
 			this.dispose();
 		}
 //--------------------------------------------------------------- FIN  METODOS AUXILIADRES -----------------------------------------------------------//
+		
+		
+		
 }

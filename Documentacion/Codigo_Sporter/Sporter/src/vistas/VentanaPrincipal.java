@@ -4,14 +4,15 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.event.ActionListener;
 import java.sql.Statement;
-import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Color;
+
 import java.sql.SQLException;
 
 import colores.Colores;
 import conexion.Conexion;
+import controlador.CtrlVentanaCrearEvento;
+import controlador.CtrlVentanaLogin;
 import imagenes.Imagenes;
 import modelo.*;
 import render.Render;
@@ -24,9 +25,10 @@ public class VentanaPrincipal extends JFrame {
 	private JTable tablaEventos;
 	protected static Statement command;
 	private ArrayList<Evento> listaEventos;
-	private Usuario persona;
+	private Persona persona;
 	private static Colores colores = new Colores();
 	private Imagenes imagenes = new Imagenes();
+	private JButton btnCerrarSesion, btnCrearEvento, btnBuscar;
 	private DefaultTableModel modelo = new DefaultTableModel();
 	
 	/**
@@ -51,6 +53,7 @@ public class VentanaPrincipal extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaPrincipal(Persona persona) throws SQLException{
+
 		//Estetica ventana
 		setResizable(false);
 		setTitle("Sporter");
@@ -58,47 +61,43 @@ public class VentanaPrincipal extends JFrame {
 		setForeground(colores.getNaranja());
 		setBackground(colores.getNaranja());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 624, 612);
+		setBounds(100, 100, 608, 612);
 		contentPane = new JPanel();
 		contentPane.setBackground(colores.getVerde());
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JButton btnCrearEvento = new JButton("Crear Evento");
+		btnCrearEvento = new JButton("Crear Evento");
 		btnCrearEvento.setBounds(15, 16, 117, 23);
 		btnCrearEvento.setBackground(colores.getNaranja());
 		
-		JButton btnCerrarSesion = new JButton("Cerrar Sesion");
-		btnCerrarSesion.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
-		btnCerrarSesion.setBounds(433, 16, 117, 23);
+		btnCerrarSesion = new JButton("Cerrar Sesion");
+		btnCerrarSesion.setBounds(456, 16, 117, 23);
 		btnCerrarSesion.setBackground(colores.getNaranja());
 		
-		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(429, 57, 103, 23);
+		btnBuscar = new JButton("Buscar");
+		btnBuscar.setBounds(460, 57, 103, 23);
 		btnBuscar.setBackground(colores.getNaranja());
 	
 		JLabel lblIntroduzcaDeporte = new JLabel("Introduzca Deporte:");
-		lblIntroduzcaDeporte.setBounds(15, 61, 98, 14);
+		lblIntroduzcaDeporte.setBounds(15, 61, 117, 14);
 		lblIntroduzcaDeporte.setForeground(colores.getAmarillo());
 		
 		textField = new JTextField();
-		textField.setBounds(117, 58, 96, 20);
+		textField.setBounds(136, 58, 86, 20);
 		textField.setColumns(10);
 		
 		JLabel lblIntroduzcaUbicacin = new JLabel("Introduzca Ubicaci\u00F3n:");
-		lblIntroduzcaUbicacin.setBounds(217, 61, 106, 14);
+		lblIntroduzcaUbicacin.setBounds(232, 61, 128, 14);
 		lblIntroduzcaUbicacin.setForeground(colores.getAmarillo());
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(327, 58, 96, 20);
+		textField_1.setBounds(360, 58, 90, 20);
 		textField_1.setColumns(10);
 		
 		JLabel lblUsuario = new JLabel(persona.getNombre());
-		lblUsuario.setBounds(217, 20, 216, 14);
+		lblUsuario.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblUsuario.setBounds(230, 20, 216, 14);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(34, 86, 516, 457);
@@ -157,5 +156,46 @@ public class VentanaPrincipal extends JFrame {
 		contentPane.add(textField_1);
 		contentPane.add(btnBuscar);
 		contentPane.add(scrollPane);
+	}
+	public void controlVentanaPrincipal(ActionListener ctrl) {
+		btnCerrarSesion.addActionListener(ctrl);
+		btnCerrarSesion.setActionCommand("Cerrar Sesion");
+		
+		btnCrearEvento.addActionListener(ctrl);
+		btnCrearEvento.setActionCommand("Crear Evento");
+	}
+	public void cerrarSesion() {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					dispose();
+					Conexion conexion = new Conexion();
+					command = conexion.getcommand();
+					VentanaLogin frame = new VentanaLogin();
+					CtrlVentanaLogin ctrl = new CtrlVentanaLogin(frame);
+					frame.controlVentana(ctrl);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	public void crearEvento(Persona persona) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Conexion conexion = new Conexion();
+					command = conexion.getcommand();
+					VentanaFrmCrearEvento vista = new VentanaFrmCrearEvento(persona);
+					CtrlVentanaCrearEvento ctrl = new CtrlVentanaCrearEvento(vista); // Primero te creas el controlador y le metes la vista
+					vista.controlVentana(ctrl); // Segundo: el metodo de la vista controlador le metes el controlador anteriormente creado
+					vista.controlChoise(ctrl);
+					vista.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }

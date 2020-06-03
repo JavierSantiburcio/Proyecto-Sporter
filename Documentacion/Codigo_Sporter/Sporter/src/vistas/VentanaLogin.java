@@ -16,6 +16,7 @@ import colores.Colores;
 import conexion.Conexion;
 import controlador.CtrlVentanaFrmLogin;
 import controlador.CtrlVentanaLogin;
+import controlador.CtrlVentanaPrincipal;
 import imagenes.Imagenes;
 import modelo.Administrador;
 import modelo.Persona;
@@ -201,7 +202,10 @@ public class VentanaLogin extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					dispose();
 					VentanaPrincipal frame = new VentanaPrincipal(persona);
+					CtrlVentanaPrincipal ctrl = new CtrlVentanaPrincipal(frame, persona);
+					frame.controlVentanaPrincipal(ctrl);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

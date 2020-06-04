@@ -298,7 +298,6 @@ public class VentanaPerfilUsuario extends JFrame{
 		
 		Evento evento = new Evento(command);
 		int idEvento = evento.getIdEventoPropio(fechaHora,persona.getId(),idDeporte,nombreUbicacion);
-		
 		evento.borrarevento(persona, idEvento);
 		modeloTabla.removeRow(table.getSelectedRow());// Elimina la fila que getSelectedRow() devuelve.
 		JOptionPane.showMessageDialog(this, "El evento deportivo se ha cancelado correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);

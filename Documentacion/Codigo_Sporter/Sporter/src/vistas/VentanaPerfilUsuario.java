@@ -289,7 +289,6 @@ public class VentanaPerfilUsuario extends JFrame{
 		
 		String fecha = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
 		String hora = (String) table.getModel().getValueAt(table.getSelectedRow(), 1);
-		String nombrePropietario = (String) table.getModel().getValueAt(table.getSelectedRow(), 2);
 		String nombreDeporte = (String) table.getModel().getValueAt(table.getSelectedRow(), 3);
 		String nombreUbicacion = (String) table.getModel().getValueAt(table.getSelectedRow(), 4);
 		String fechaHora = fecha + " " + hora; 
@@ -298,10 +297,7 @@ public class VentanaPerfilUsuario extends JFrame{
 		int idDeporte = deporte.obtenerIdDeporte(nombreDeporte); 
 		
 		Evento evento = new Evento(command);
-		int idCreador = evento.getIdCreador(nombrePropietario);
-		
-		int idEvento = evento.getIdevento(fechaHora,idCreador,idDeporte,nombreUbicacion);
-		System.out.println(idEvento);
+		int idEvento = evento.getIdEventoPropio(fechaHora,persona.getId(),idDeporte,nombreUbicacion);
 		
 		evento.borrarevento(persona, idEvento);
 		modeloTabla.removeRow(table.getSelectedRow());// Elimina la fila que getSelectedRow() devuelve.
@@ -321,9 +317,7 @@ public class VentanaPerfilUsuario extends JFrame{
 		int idDeporte = deporte.obtenerIdDeporte(nombreDeporte); 
 		
 		Evento evento = new Evento(command);
-		int idCreador = evento.getIdCreador(nombrePropietario);
-		
-		int idEvento = evento.getIdevento(fechaHora,idCreador,idDeporte,nombreUbicacion);
+		int idEvento = evento.getIdeventoUnido(fechaHora,nombrePropietario,idDeporte,nombreUbicacion);
 		evento.dejarEvento(persona,idEvento);
 		modeloTabla.removeRow(table.getSelectedRow());// Elimina la fila que getSelectedRow() devuelve.
 		JOptionPane.showMessageDialog(this, "Has abandonado el evento deportivo correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);

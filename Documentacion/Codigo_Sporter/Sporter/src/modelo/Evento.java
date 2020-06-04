@@ -152,7 +152,8 @@ public class Evento {
 	public void borrarevento(Persona persona,int idEvento) throws SQLException {
 		//No compruebo si la persona es el creador porque ya lo controlo al generar el boton cancelar en la tabla
 		// para los eventos donde el usuario es el creador. Sentencia 262 en la clase VentanaPerfilUsuario
-		command.execute("delete from spoter.evento where id_Evento = " + idEvento + ";");
+		command.execute("DELETE FROM spoter.evento WHERE id_Evento = " + idEvento + ";");
+		command.execute("DELETE FROM spoter.usuarios_has_evento WHERE evento_id_Evento = " + idEvento + ";");
 	}
 
 	public void unirse(Persona persona) throws SQLException {
@@ -217,22 +218,26 @@ public class Evento {
 		return num;
 	}
 	
-	//Daniel: obtener el id del propietario de un evento dado su nombre. 
-	public int getIdCreador(String nombre) throws SQLException {
-		int idCreador;
-		System.out.println(nombre);
-		ResultSet data = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios Where nombre = '"+ nombre +"';");
-		data.next();
-		idCreador = data.getInt(1);
-
-		return idCreador;
-	}
+	//Daniel: obtener el id del evento dado sus valores
+		public int getIdEventoPropio(String fechaHora, int idCreador, int idDeporte, String nombreUbicacion) throws SQLException {
+			int idEvento;
+			ResultSet data = command.executeQuery("SELECT id_Evento FROM spoter.evento E WHERE E.Creador = " + idCreador + 
+					" AND E.ubicacion = '" + nombreUbicacion + "' AND E.fecha = '" + fechaHora + "' AND E.Deporte = " + idDeporte + ";");
+			data.next();
+			idEvento = data.getInt(1);
+			return idEvento;
+		}
+	
 
 	//Daniel: obtener el id del evento dado sus valores
-	public int getIdevento(String fechaHora, int idCreador, int idDeporte, String nombreUbicacion) throws SQLException {
+	public int getIdeventoUnido(String fechaHora, String nombreCreador, int idDeporte, String nombreUbicacion) throws SQLException {
 		int idEvento;
-		ResultSet data = command.executeQuery("SELECT id_Evento "
-				+ "FROM spoter.evento Where ubicacion = '"+nombreUbicacion+"' AND fecha = '"+fechaHora+"' AND Creador = "+idCreador+" AND Deporte = "+idDeporte+";");
+		ResultSet data = command.executeQuery("SELECT id_Evento " + 
+				"FROM spoter.evento E INNER JOIN spoter.usuarios U ON E.Creador = U.idUsuarios " + 
+				"AND U.nombre = '" + nombreCreador + "' " + 
+				"AND E.ubicacion = '" + nombreUbicacion  +"' " + 
+				"AND E.fecha = '" + fechaHora + "' " + 
+				"AND Deporte = " + idDeporte + ";");
 		data.next();
 		idEvento = data.getInt(1);
 		return idEvento;

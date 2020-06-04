@@ -19,41 +19,18 @@ import modelo.*;
 import render.Render;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.event.ActionEvent;
 
 public class VentanaPrincipal extends JFrame {
 	private JPanel contentPane;
 	private JTable tablaEventos;
 	private Choice choice_Deporte,choice_Ubicacion;
 	protected static Statement command;
-	private List<Evento> listaEventos;
 	private static Colores colores = new Colores();
 	private Imagenes imagenes = new Imagenes();
 	private JButton btnCerrarSesion, btnCrearEvento, btnBuscar, lblUsuario, btnUnirse;
 	private DefaultTableModel modelo = new DefaultTableModel();
 	private Persona persona;
-	
-	/**
-	 * Launch the application.
-	 *
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Conexion conexion = new Conexion();
-					command = conexion.getcommand();
-					VentanaPrincipal frame = new VentanaPrincipal();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
 
-	/**
-	 * Create the frame.
-	 */
 	public VentanaPrincipal(Persona persona) throws SQLException{
 		//Conectar a MySQL
 		Conexion conexion = new Conexion();
@@ -184,6 +161,9 @@ public class VentanaPrincipal extends JFrame {
 		
 		lblUsuario.addActionListener(ctrl);
 		lblUsuario.setActionCommand("Perfil Usuario");
+		
+		btnBuscar.addActionListener(ctrl);
+		btnBuscar.setActionCommand("Buscar Evento");
 	}
 	//Metodo para rellenar los items del choice de deporte
 	private void cargarChoiceDeporte(Choice c) throws SQLException {
@@ -255,15 +235,13 @@ public class VentanaPrincipal extends JFrame {
 			int deportex = deport.obtenerIdDeporte(deportes.get(x));
 			listEventos = evento.getListEventos(ubicacion, idUsuario, deportex);
 			for(int i = 0; i < listEventos.size(); i++){
-				Object[] informacion = new Object[7];
-				String propietario = evento.getNombreUsuario(listEventos.get(i).getOrganiza(), listEventos.get(i).getId());
-				String deporte = evento.getNombreDeporte(listEventos.get(i).getDeporte(), listEventos.get(i).getId()); 
+				Object[] informacion = new Object[7]; 
 				String date = listEventos.get(i).getFecha();
 				String fecha = date.substring(0, 10);
 				String hora = date.substring(11, 19);
-	
-				informacion[0] = propietario;
-				informacion[1] = deporte;
+
+				informacion[0] = evento.getNombreUsuario(listEventos.get(i).getOrganiza(), listEventos.get(i).getId());
+				informacion[1] = evento.getNombreDeporte(listEventos.get(i).getDeporte(), listEventos.get(i).getId());
 				informacion[2] = listEventos.get(i).getUbicacion();;
 				informacion[3] = listEventos.get(i).getNumParticipantesActivos(listEventos.get(i).getId())+ "/"+listEventos.get(i).getNumeroParticipantes();
 				informacion[4] = fecha;
@@ -271,6 +249,31 @@ public class VentanaPrincipal extends JFrame {
 				informacion[6] = btnUnirse;
 				modelo.addRow(informacion);
 			}
+		}
+	}
+	public void llenarTablaBuscar() throws SQLException{
+		modelo.setRowCount(0);
+		List<Evento> listEventos = new ArrayList<Evento>();
+		Evento evento = new Evento(command);
+		Deporte deportes = new Deporte(command);
+		int iddeporte = deportes.obtenerIdDeporte(choice_Deporte.getSelectedItem());
+		String ubicacion = choice_Ubicacion.getSelectedItem();
+		
+		listEventos = evento.getListEventos(ubicacion, this.persona.getId(), iddeporte);
+		for(int i = 0; i < listEventos.size(); i++){
+			Object[] informacion = new Object[7]; 
+			String date = listEventos.get(i).getFecha();
+			String fecha = date.substring(0, 10);
+			String hora = date.substring(11, 19);
+
+			informacion[0] = evento.getNombreUsuario(listEventos.get(i).getOrganiza(), listEventos.get(i).getId());
+			informacion[1] = evento.getNombreDeporte(listEventos.get(i).getDeporte(), listEventos.get(i).getId());
+			informacion[2] = listEventos.get(i).getUbicacion();;
+			informacion[3] = listEventos.get(i).getNumParticipantesActivos(listEventos.get(i).getId())+ "/"+listEventos.get(i).getNumeroParticipantes();
+			informacion[4] = fecha;
+			informacion[5] = hora;
+			informacion[6] = btnUnirse;
+			modelo.addRow(informacion);
 		}
 	}
 }

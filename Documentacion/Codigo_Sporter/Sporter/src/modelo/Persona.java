@@ -66,22 +66,19 @@ public class Persona extends Usuario{
 		return localidad;
 	}
 	
-	// Javier: aniadidos los parametros necesarios
 	public void modificarPerfil(String nombre, String localidad, String email, String password, String [] deportes) throws SQLException {
 		if(!existente) throw new RuntimeException("Un usuario que no existe no se modifica");
-		
 		command.execute("UPDATE `spoter`.`usuarios` SET `nombre` = '"+nombre+"', `localidad` = '"+localidad+"',`password` = '"+ password +"' WHERE (`email` = '"+email+"');");
 		
-		command.execute("DELETE from `spoter`.`usuarios_has_deporte` WHERE (`usuarios_idUsuarios` = " +id+ ");");
+		this.nombre = nombre;
+		this.localidad = localidad;
+		this.password = password;
 		
 		Deporte deporte = new Deporte(command);
 		for(String nombre1 : deportes) {
 			this.meterDeporte(deporte.obtenerIdDeporte(nombre1));
 		}
 		
-		this.nombre = nombre;
-		this.localidad = localidad;
-		this.password = password;
 	}
 	
 	public void crearPerfil(String nombre,String localidad,String email,String password, String [] deportes) throws SQLException {

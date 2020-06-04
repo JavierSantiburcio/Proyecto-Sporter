@@ -43,9 +43,9 @@ public class Pruebas {
 		
 		Persona persona = new Persona(command);
 		
-		res = command.executeQuery("select nombre from spoter.deporte where idDeporte = 1;");
+		res = command.executeQuery("select nombre from spoter.deporte where idDeporte = 3;");
 		res.next();
-		String[] deportes = {res.getString(1)};
+		String[] deportes = {};
 		
 		persona.crearPerfil("a", "a", "a", "a", deportes);
 		
@@ -79,33 +79,33 @@ public class Pruebas {
 		
 		
 	//ModificarPerfil:	Se modifican los datos dados.
-		res = command.executeQuery("select nombre from spoter.deporte where idDeporte = 2;");
+		res = command.executeQuery("select nombre from spoter.deporte where idDeporte = 4;");
 		res.next();
-		String [] deportes2 = {res.getString(1)};
+		String [] deportes2 = {};
 		persona2 = new Persona(command,persona2.getId());
-		persona2.modificarPerfil("c", "d","e","f",deportes2);
+		persona2.modificarPerfil("c", "d","b","f",deportes2);
 		
-		res = command.executeQuery("select nombre,localidad from spoter.usuarios where spoter.usuarios.idUsuarios = "+persona2.getId()+";");
+		res = command.executeQuery("select nombre,localidad from spoter.usuarios where email = '"+persona2.getEmail()+"';");
 		res.next();
 		
 		//Comprobamos que los cambios se han ejecutado bien
-		assertEquals(res.getString(1), "c");
-		assertEquals(res.getString(2), "d");
+		assertEquals(res.getString(1), persona2.getNombre());
+		assertEquals(res.getString(2), persona2.getLocalidad());
 		
 	//Se Aniade deporte correctamente
-		persona2.meterDeporte(1);
+		persona2.meterDeporte(13);
 		
 		res = command.executeQuery("select deporte_idDeporte from spoter.usuarios_has_deporte where spoter.usuarios_has_deporte.usuarios_idUsuarios = "+persona2.getId()+";");
 		res.next();
 		
-		assertEquals(res.getInt(1), 1);
+		assertEquals(res.getInt(1), 13);
 		
 		command.execute("SET FOREIGN_KEY_CHECKS = 0;");
 		command.execute("TRUNCATE TABLE spoter.usuarios;");
 		command.execute("SET FOREIGN_KEY_CHECKS = 1;");
 	}
 	
-	
+
 	@Test
 	public void FuncionesAdmin() throws SQLException {
 		int id = 0;
@@ -134,7 +134,7 @@ public class Pruebas {
 		//Al borrar un usuario hay una persona menos en la base de datos.
 		assertEquals(res.getInt(1), num-1);
 		
-		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('a', '10', '11/11/11', '1', '1');");
+		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('a', '10', '11/11/11', '1', '10');");
 		
 		res = command.executeQuery("SELECT id_Evento FROM spoter.evento order by id_Evento desc;");
 		res.next();
@@ -161,13 +161,13 @@ public class Pruebas {
 	public void EventoGuardaBienEventos() throws SQLException {
 		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES ('a', 'a', 'a', '0', 'a');");
 		int id = 0;
-		ResultSet res = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios orde by idUsuarios desc;");
+		ResultSet res = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios order by idUsuarios desc;");
 		
 		res.next();
 		id = res.getInt(1);
 		Persona persona  = new Persona(command, id);
 		
-		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('a', '10', '11/11/11', '"+id+"', '1');");
+		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('a', '10', '11/11/11', '"+id+"', '10');");
 		
 		
 		res = command.executeQuery("SELECT id_Evento FROM spoter.evento order by id_Evento desc;");
@@ -188,7 +188,7 @@ public class Pruebas {
 		assertEquals(res.getInt(6), evento.getDeporte());
 		
 		evento= new Evento(command);
-		evento.crearEvento(persona, 1, "k", "11/11/11", 10);
+		evento.crearEvento(persona, 10, "k", "11/11/11", 10);
 		
 		res = command.executeQuery("Select * from spoter.evento where id_Evento = "+ evento.getId() +"");
 		res.next();
@@ -217,7 +217,7 @@ public class Pruebas {
 		res.next();
 		Creador = res.getInt(1);
 		
-		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('b', '10', '11/11/11', '"+Creador+"', '1');");
+		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('b', '10', '11/11/11', '"+Creador+"', '3');");
 		
 		res = command.executeQuery("SELECT id_Evento FROM spoter.evento order by id_Evento desc;");
 		res.next();
@@ -255,7 +255,7 @@ public class Pruebas {
 		res.next();
 		Creador = res.getInt(1);
 		
-		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('b', '10', '11/11/11', '"+Creador+"', '1');");
+		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`) VALUES ('b', '10', '11/11/11', '"+Creador+"', '10');");
 		
 		res = command.executeQuery("SELECT id_Evento FROM spoter.evento order by id_Evento desc;");
 		res.next();
@@ -264,13 +264,13 @@ public class Pruebas {
 		Evento evento = new Evento(command, id);
 		Persona persona = new Persona(command,Creador);
 		
-		res = command.executeQuery("SELECT Count(*) FROM spoter.usuario_has_evento where evento_id_Evento = "+id+";");
+		res = command.executeQuery("SELECT Count(*) FROM spoter.usuarios_has_evento where evento_id_Evento = "+id+";");
 		res.next();
 		int numero = res.getInt(1);
 		
 		evento.unirse(persona);
 		
-		res = command.executeQuery("SELECT Count(*) FROM spoter.usuario_has_evento where evento_id_Evento = "+id+";");
+		res = command.executeQuery("SELECT Count(*) FROM spoter.usuarios_has_evento where evento_id_Evento = "+id+";");
 		res.next();
 		
 		//Se ha aumentado en uno el numero de participantes en este evento
@@ -279,7 +279,7 @@ public class Pruebas {
 		
 		evento.dejarEvento(persona);// Daniel : he modificado un poco ese metodo, ahora tiene tambien el idEvento
 		
-		res = command.executeQuery("SELECT Count(*) FROM spoter.usuario_has_evento where evento_id_Evento = "+id+";");
+		res = command.executeQuery("SELECT Count(*) FROM spoter.usuarios_has_evento where evento_id_Evento = "+id+";");
 		res.next();
 		
 		assertEquals(res.getInt(1), numero - 1);

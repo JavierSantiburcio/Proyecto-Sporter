@@ -352,6 +352,8 @@ public class VentanaFormularioLogin extends JFrame {
 		ventanaPerfilUsuario.setPersona(persona);
 		ventanaPerfilUsuario.eliminarItemsChoice();
 		ventanaPerfilUsuario.cargarDatos();
+		ventanaPerfilUsuario.limpiarTabla();
+		ventanaPerfilUsuario.generarContenidoTabla();
 		
 		JOptionPane.showMessageDialog(this, "Datos modificados correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
 		this.cerrarVentana();

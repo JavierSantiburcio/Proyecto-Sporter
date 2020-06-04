@@ -220,6 +220,7 @@ public class Evento {
 	//Daniel: obtener el id del propietario de un evento dado su nombre. 
 	public int getIdCreador(String nombre) throws SQLException {
 		int idCreador;
+		System.out.println(nombre);
 		ResultSet data = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios Where nombre = '"+ nombre +"';");
 		data.next();
 		idCreador = data.getInt(1);

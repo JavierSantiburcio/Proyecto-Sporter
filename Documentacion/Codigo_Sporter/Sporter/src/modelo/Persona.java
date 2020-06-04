@@ -74,6 +74,8 @@ public class Persona extends Usuario{
 		this.localidad = localidad;
 		this.password = password;
 		
+		command.execute("DELETE from `spoter`.`usuarios_has_deporte` WHERE (`usuarios_idUsuarios` = " +id+ ");"); // NO ME BORRES POR FAVOR :o
+		
 		Deporte deporte = new Deporte(command);
 		for(String nombre1 : deportes) {
 			this.meterDeporte(deporte.obtenerIdDeporte(nombre1));

@@ -61,6 +61,7 @@ public class VentanaFrmCrearEvento extends JFrame {
 		setTitle("Sporter - Crear Evento Deportivo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 423, 445);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(64, 191, 119));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

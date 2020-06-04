@@ -64,6 +64,7 @@ public class VentanaPrincipal extends JFrame {
 		setBackground(colores.getNaranja());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 608, 612);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(colores.getVerde());
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

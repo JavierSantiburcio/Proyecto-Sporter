@@ -65,6 +65,7 @@ public class VentanaPerfilUsuario extends JFrame{
 		setTitle("Sporter - Perfil Usuario");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 970, 517);
+		setLocationRelativeTo(vista);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setBackground(new Color(64, 191, 119));

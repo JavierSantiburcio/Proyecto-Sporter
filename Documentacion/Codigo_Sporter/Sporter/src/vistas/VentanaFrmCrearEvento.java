@@ -24,6 +24,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.awt.Choice;
 
@@ -35,10 +40,14 @@ public class VentanaFrmCrearEvento extends JFrame {
 	protected static Statement command;
 	private static Colores colores = new Colores();
 	private JPanel contentPane;
-	private JTextField textField_Propietario,textField_Fecha,textField_numPart, textField_Hora;
+	private JTextField textField_Propietario,textField_anio,textField_numPart;
 	private JButton button_CrearEvento, button_Cancelar;
 	private Choice choice_Deporte,choice_Ubicacion;
 	private JLabel lblPropietario,lblDeporte,lblUbicacion,lblFecha,lblHora,lblNumeroParticipantes;
+	private JTextField textField_mes;
+	private JTextField textField_dia;
+	private JTextField textField_hora;
+	private JTextField textField_minuto;
 	
 //------------------------------------------------------------ INICIO ESTRUCTURA VENTANA ---------------------------------------------------------//
 	
@@ -59,6 +68,7 @@ public class VentanaFrmCrearEvento extends JFrame {
 		contentPane.setLayout(null);
 		
 		lblPropietario = new JLabel("PROPIETARIO");
+		lblPropietario.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblPropietario.setBounds(33, 20, 236, 14);
 		lblPropietario.setForeground(colores.getAmarillo());
 		contentPane.add(lblPropietario);
@@ -71,38 +81,37 @@ public class VentanaFrmCrearEvento extends JFrame {
 		textField_Propietario.setColumns(10);
 		
 		lblDeporte = new JLabel("DEPORTE");
+		lblDeporte.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblDeporte.setBounds(33, 80, 236, 14);
 		lblDeporte.setForeground(colores.getAmarillo());
 		contentPane.add(lblDeporte);
 		
 		lblUbicacion = new JLabel("UBICACIÓN");
+		lblUbicacion.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblUbicacion.setBounds(33, 140, 236, 14);
 		lblUbicacion.setForeground(colores.getAmarillo());
 		contentPane.add(lblUbicacion);
 		
-		lblFecha = new JLabel("FECHA (aaaa-mm-dd)");
+		lblFecha = new JLabel("FECHA (dd/mm/aaaa)");
+		lblFecha.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblFecha.setBounds(33, 200, 236, 14);
 		lblFecha.setForeground(colores.getAmarillo());
 		contentPane.add(lblFecha);
 		
-		textField_Fecha = new JTextField();
-		textField_Fecha.setToolTipText("");
-		textField_Fecha.setColumns(10);
-		textField_Fecha.setBounds(33, 220, 342, 20);
-		contentPane.add(textField_Fecha);
+		textField_anio = new JTextField();
+		textField_anio.setToolTipText("");
+		textField_anio.setColumns(10);
+		textField_anio.setBounds(155, 220, 44, 20);
+		contentPane.add(textField_anio);
 		
-		lblHora = new JLabel("HORA (hh:mm:ss)");
+		lblHora = new JLabel("HORA (hh:mm)");
+		lblHora.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblHora.setBounds(33, 260, 236, 14);
 		lblHora.setForeground(colores.getAmarillo());
 		contentPane.add(lblHora);
 		
-		textField_Hora = new JTextField();
-		textField_Hora.setToolTipText("");
-		textField_Hora.setColumns(10);
-		textField_Hora.setBounds(33, 280, 342, 20);
-		contentPane.add(textField_Hora);
-		
 		lblNumeroParticipantes = new JLabel("NºJUGADORES");
+		lblNumeroParticipantes.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNumeroParticipantes.setBounds(285, 80, 90, 14);
 		lblNumeroParticipantes.setForeground(colores.getAmarillo());
 		contentPane.add(lblNumeroParticipantes);
@@ -136,7 +145,48 @@ public class VentanaFrmCrearEvento extends JFrame {
 		cargarNombreUsuario();
 		cargarChoiceDeporte(choice_Deporte);
 		cargarChoiceUbicacion(choice_Ubicacion);
+		
+		JLabel lbl_separadorFecha = new JLabel("/");
+		lbl_separadorFecha.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lbl_separadorFecha.setBounds(83, 220, 7, 19);
+		contentPane.add(lbl_separadorFecha);
+		
+		textField_mes = new JTextField();
+		textField_mes.setToolTipText("");
+		textField_mes.setColumns(10);
+		textField_mes.setBounds(95, 220, 44, 20);
+		contentPane.add(textField_mes);
+		
+		textField_dia = new JTextField();
+		textField_dia.setToolTipText("");
+		textField_dia.setColumns(10);
+		textField_dia.setBounds(33, 220, 44, 20);
+		contentPane.add(textField_dia);
+		
+		JLabel lblNewLabel_1 = new JLabel("/");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_1.setBounds(143, 220, 7, 19);
+		contentPane.add(lblNewLabel_1);
+		
+		textField_hora = new JTextField();
+		textField_hora.setToolTipText("");
+		textField_hora.setColumns(10);
+		textField_hora.setBounds(33, 280, 44, 20);
+		contentPane.add(textField_hora);
+		
+		textField_minuto = new JTextField();
+		textField_minuto.setToolTipText("");
+		textField_minuto.setColumns(10);
+		textField_minuto.setBounds(95, 280, 44, 20);
+		contentPane.add(textField_minuto);
+		
+		JLabel lbl_separadorHora = new JLabel(":");
+		lbl_separadorHora.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lbl_separadorHora.setBounds(84, 280, 7, 19);
+		contentPane.add(lbl_separadorHora);
+		
 		cargarNumparticipantes();
+		cargarFechaHora();
 	}
 
 
@@ -162,24 +212,109 @@ public class VentanaFrmCrearEvento extends JFrame {
 		
 //---------------------------------------------------------------- METODOS AUXILIADRES ----------------------------------------------------//
 		
-		public void crearEvento() throws SQLException {
+		public void crearEvento() throws SQLException, ParseException {
 			int idDeporte;
 			Deporte deporte = new Deporte(command);
 			idDeporte = deporte.obtenerIdDeporte(choice_Deporte.getSelectedItem());
+
+			//Obtengo los datos de los campos del formulario
 			String ubicacion = choice_Ubicacion.getSelectedItem();
-			String fecha = textField_Fecha.getText();
-			String hora = textField_Hora.getText();
+
+			String anios = textField_anio.getText();
+			String mes = textField_mes.getText();
+			String dias = textField_dia.getText();
+
+			String horas = textField_hora.getText();
+			String minutos = textField_minuto.getText();
+
+			String fecha = anios + "-" + mes + "-" + dias;
+			String hora = horas + ":" + minutos + ":00";
+			//Obtengo la fecha en el formato de la BD
 			String fechaHora = fecha + " " + hora;
+
 			int numParticipantes = Integer.parseInt(textField_numPart.getText());
-			if(fecha.equals("")) {
-				JOptionPane.showMessageDialog(this, "Campo Fecha vacío.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
-			}else if(hora.equals("")){
-				JOptionPane.showMessageDialog(this, "Campo Hora vacío.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
+
+			//Controlo que los campos de texto de Fecha y Hora no estan vacios
+			if(anios.equals("") || mes.equals("") || dias.equals("")) {
+
+				JOptionPane.showMessageDialog(this, "Campo Fecha vac"+'í'+"o o incompleto.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
+
+			}else if(horas.equals("") || minutos.equals("") ){
+
+				JOptionPane.showMessageDialog(this, "Campo Hora vac"+'í'+"o o incompleto.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
+
 			}else {
-				Evento evento = new Evento(command);
-				evento.crearEvento(persona, idDeporte, ubicacion, fechaHora, numParticipantes);
-				JOptionPane.showMessageDialog(this, "El evento deportivo se ha creado correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
+
+				Date dateUsuario = new Date();
+				Date dateActual = new Date();
+
+				DateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// Obtengo la fecha del sistema con ese formato
+
+				String fechaActual = formatoFecha.format(dateActual).toString();
+
+				dateActual = formatoFecha.parse(fechaActual);
+				dateUsuario = formatoFecha.parse(fechaHora);
+
+				System.out.println(dateActual);
+				System.out.println(dateUsuario);
+				//Controlo que no pueda crear eventos con fecha y hora anteriores a la actual
+				if(dateUsuario.before(dateActual)) {
+					System.out.println(dateUsuario +" es anterior " +dateActual);
+					JOptionPane.showMessageDialog(this, "No se pudo crear el evento.\n"
+							+ "La fecha y hora introducida es anterior a la actual.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
+				}else {
+
+					Evento evento = new Evento(command);
+					//Obtengo todas las fechas de los eventos del usuario donde es creador o esta unido
+					List<String> listFechasTodosEventos = evento.getFechaTodosEventos(persona.getId());
+
+					System.out.println("Lista de fecha eventos usuario: "+listFechasTodosEventos.toString());
+					System.out.println("Fecha introducida:" + fechaHora);
+
+					//Compruebo que no se crea un evento en la misma franja horaria de otro evento creado o unido
+					if(listFechasTodosEventos.contains(fechaHora)) {
+
+						JOptionPane.showMessageDialog(this, "No se pudo crear el evento.\n"
+								+ "Tiene un evento en la misma franja horaria.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
+
+					} else {
+
+						evento.crearEvento(persona, idDeporte, ubicacion, fechaHora, numParticipantes);
+						JOptionPane.showMessageDialog(this, "El evento deportivo se ha creado correctamente.\n"
+								+ "Podr"+'á'+" visualizarlo desde su perfil.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
+						
+						cerrarVentana();
+
+					}
+				}
 			}
+		}
+		
+		
+		//Daniel: metodo para cargar la fecha y la hora actual del sistema y ayudar al usuario
+		public void cargarFechaHora(){
+			Date date = new Date();
+			
+			DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss"); // Obtengo la hora del sistema con ese formato
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");// Obtengo la fecha del sistema con ese formato
+		
+			
+			String horaCompleta = hourFormat.format(date).toString();
+			String fechaCompleta = dateFormat.format(date).toString();
+		
+			String anio = fechaCompleta.substring(0, 4);
+			String meses = fechaCompleta.substring(5, 7);
+			String dias = fechaCompleta.substring(8, 10);
+			
+			String horas = horaCompleta.substring(0,2);
+			String minutos = horaCompleta.substring(3,5);
+			
+			textField_hora.setText(horas);
+			textField_minuto.setText(minutos);
+			textField_anio.setText(anio);
+			textField_mes.setText(meses);
+			textField_dia.setText(dias);
+			
 		}
 		
 		//Daniel: Metodo para cargar el campo de texto nombre usuario del formulario
@@ -216,8 +351,4 @@ public class VentanaFrmCrearEvento extends JFrame {
 		public void cerrarVentana() {
 			this.dispose();
 		}
-//--------------------------------------------------------------- FIN  METODOS AUXILIADRES -----------------------------------------------------------//
-		
-		
-		
 }

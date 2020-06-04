@@ -236,5 +236,41 @@ public class Evento {
 		idEvento = data.getInt(1);
 		return idEvento;
 	}
+	
+	//Daniel: metodo para obtener las fechas de los eventos creados o unidos
+	public List<String> getFechaTodosEventos(int idUsuario) throws SQLException{
+		List<String> listFechaEventos = new ArrayList<String>();
+		ResultSet data = command.executeQuery("((SELECT fecha FROM spoter.evento E WHERE E.Creador =" + idUsuario + ")"
+				+ " UNION "
+				+ "(SELECT fecha FROM spoter.evento E INNER JOIN spoter.usuarios_has_evento UE ON UE.evento_id_Evento"
+				+ " IN " + "(SELECT id_Evento FROM spoter.evento EV WHERE EV.Creador !=" + idUsuario + ")" + " WHERE "
+				+ "E.id_Evento = UE.evento_id_Evento" + " AND " + "UE.usuarios_idUsuarios =" + idUsuario + "));");
+		while (data.next()) {
+			listFechaEventos.add(data.getString(1));
+		}
+		return listFechaEventos;
+	}
+	
+	//Daniel: metodo para obtener las fechas de los eventos creados
+	public List<String> getFechaEventosCreados(int idUsuario) throws SQLException{
+		List<String> listFechaEventos = new ArrayList<String>();
+		ResultSet data = command.executeQuery("SELECT fecha FROM spoter.evento E WHERE E.Creador =" + idUsuario + ";");
+		while (data.next()) {
+			listFechaEventos.add(data.getString(1));
+		}
+		return listFechaEventos;
+	}
+	
+	//Daniel: metodo para obtener las fechas de los eventos unidos
+		public List<String> getFechaEventosUnidos(int idUsuario) throws SQLException{
+			List<String> listFechaEventos = new ArrayList<String>();
+			ResultSet data = command.executeQuery("SELECT fecha FROM spoter.evento E INNER JOIN spoter.usuarios_has_evento UE ON UE.evento_id_Evento"
+					+ " IN " + "(SELECT id_Evento FROM spoter.evento EV WHERE EV.Creador !=" + idUsuario + ")" + " WHERE "
+					+ "E.id_Evento = UE.evento_id_Evento" + " AND " + "UE.usuarios_idUsuarios =" + idUsuario + ";");
+			while (data.next()) {
+				listFechaEventos.add(data.getString(1));
+			}
+			return listFechaEventos;
+		}
 
 }

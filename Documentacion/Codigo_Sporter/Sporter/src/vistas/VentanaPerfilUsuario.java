@@ -304,7 +304,7 @@ public class VentanaPerfilUsuario extends JFrame{
 		
 		evento.borrarevento(persona, idEvento);
 		modeloTabla.removeRow(table.getSelectedRow());// Elimina la fila que getSelectedRow() devuelve.
-		JOptionPane.showMessageDialog(this, "El evento deportivo se ha cancelado correctamente","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
+		JOptionPane.showMessageDialog(this, "El evento deportivo se ha cancelado correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
 	}
 
 	public void salirEvento() throws SQLException {
@@ -325,7 +325,7 @@ public class VentanaPerfilUsuario extends JFrame{
 		int idEvento = evento.getIdevento(fechaHora,idCreador,idDeporte,nombreUbicacion);
 		evento.dejarEvento(persona,idEvento);
 		modeloTabla.removeRow(table.getSelectedRow());// Elimina la fila que getSelectedRow() devuelve.
-		JOptionPane.showMessageDialog(this, "Has abandonado el evento deportivo correctamente","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
+		JOptionPane.showMessageDialog(this, "Has abandonado el evento deportivo correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
 	}
 
 	//Daniel: Navegación a la ventana del formulario de modificar perfil de Javi

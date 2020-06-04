@@ -11,6 +11,10 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import colores.Colores;
 import conexion.Conexion;
@@ -51,7 +55,7 @@ public class VentanaLogin extends JFrame {
 	}
 
 	// Estética de la ventana
-	public VentanaLogin() {
+	public VentanaLogin() throws ParseException {
 		setResizable(false);
 		
 
@@ -137,6 +141,7 @@ public class VentanaLogin extends JFrame {
 			JLabel lblNewLabel_3 = new JLabel("Usuario o contrase"+'ñ'+"a incorrecto");
 			panel.add(lblNewLabel_3);
 		}
+		
 	}
 	
 	// Controlador

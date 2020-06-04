@@ -18,6 +18,7 @@ import java.util.Arrays;
 
 import javax.swing.JPasswordField;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 import colores.Colores;
 import conexion.Conexion;
@@ -36,6 +37,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.List;
+import java.awt.Font;
 
 
 
@@ -69,7 +71,7 @@ public class VentanaFormularioLogin extends JFrame {
 		this.modificar = modificar;
 		this.ventanaPerfilUsuario = vista;
 
-		setTitle("Sporter");
+		setTitle("Sporter - Datos usuario");
 		setIconImage(imagenes.getLogo_sin_nombreEscalado(16, 16));
 		setForeground(colores.getNaranja());
 		setBackground(colores.getNaranja());
@@ -83,13 +85,14 @@ public class VentanaFormularioLogin extends JFrame {
 
 		// Panel para la etiqueta y campo USUARIO 
 		JPanel panel = new JPanel();
-		panel.setBounds(74, 24, 373, 51);
+		panel.setBounds(38, 25, 409, 51);
 		panel.setBackground(colores.getVerde());
 		contentPane.add(panel);
 		panel.setLayout(null);
 
 		JLabel lblNewLabel = new JLabel("Nombre de usuario:");
-		lblNewLabel.setBounds(94, 8, 94, 14);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel.setBounds(10, 8, 130, 14);
 		lblNewLabel.setForeground(colores.getAmarillo());
 		panel.add(lblNewLabel);
 
@@ -98,7 +101,7 @@ public class VentanaFormularioLogin extends JFrame {
 			campoUsr = persona.getNombre();
 		}
 		textUsr = new JTextField(campoUsr);
-		textUsr.setBounds(193, 5, 86, 20);
+		textUsr.setBounds(150, 6, 200, 20);
 		panel.add(textUsr);
 		textUsr.setColumns(10);
 
@@ -106,12 +109,15 @@ public class VentanaFormularioLogin extends JFrame {
 
 		// Panel para la etiqueta y campo EMAIL
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(74, 87, 373, 51);
+		panel_1.setBounds(38, 87, 409, 51);
 		panel_1.setBackground(colores.getVerde());
 		contentPane.add(panel_1);
+		panel_1.setLayout(null);
 
 		JLabel lblNewLabel_1 = new JLabel("Email:");
-		lblNewLabel_1.setForeground(colores.getAmarillo());
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_1.setBounds(10, 8, 130, 14);
+		lblNewLabel_1.setForeground(new Color(255, 222, 89));
 		panel_1.add(lblNewLabel_1);
 
 		String campoEmail = "";
@@ -119,17 +125,21 @@ public class VentanaFormularioLogin extends JFrame {
 			campoEmail = persona.getEmail();
 		}
 		textEmail = new JTextField(campoEmail);
+		textEmail.setBounds(150, 5, 200, 20);
 		if(modificar) textEmail.setEditable(false);
 		panel_1.add(textEmail);
 		textEmail.setColumns(10);
 
 		// Panel para la etiqueta y campo CONTRASENIA 
 		JPanel panel_1_1 = new JPanel();
-		panel_1_1.setBounds(74, 150, 373, 51);
+		panel_1_1.setBounds(38, 150, 409, 51);
 		panel_1_1.setBackground(colores.getVerde());
 		contentPane.add(panel_1_1);
+		panel_1_1.setLayout(null);
 
 		JLabel lblNewLabel_1_1 = new JLabel("Contrase"+'ñ'+"a:");
+		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_1_1.setBounds(10, 8, 130, 14);
 		lblNewLabel_1_1.setForeground(colores.getAmarillo());
 		panel_1_1.add(lblNewLabel_1_1);
 
@@ -138,42 +148,51 @@ public class VentanaFormularioLogin extends JFrame {
 			campoPsswd = persona.getPassword();
 		}
 		passwordField = new JPasswordField(campoPsswd);
+		passwordField.setBounds(150, 5, 200, 20);
 		panel_1_1.add(passwordField);
 		passwordField.setColumns(10);
 
 
 		// Panel para la etiqueta y la selecciÃ³n de DEPORTES
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(74, 213, 373, 99);
+		panel_2.setBounds(38, 213, 409, 99);
 		panel_2.setBackground(colores.getVerde());
 		contentPane.add(panel_2);
+		panel_2.setLayout(null);
 
 		JLabel lblNewLabel_2 = new JLabel("Deportes favoritos:");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_2.setBounds(10, 36, 134, 14);
 		lblNewLabel_2.setForeground(colores.getAmarillo());
 		panel_2.add(lblNewLabel_2);
 
 		listDeportes = new java.awt.List(5, true);
+		listDeportes.setBounds(150, 10, 200, 74);
 		listDeportes.setMultipleMode(true);
 		panel_2.add(listDeportes);
 
 		// Panel para la etiqueta y la selecciÃ³n de LOCALIZACION
 		JPanel panel_2_1 = new JPanel();
-		panel_2_1.setBounds(74, 324, 373, 51);
+		panel_2_1.setBounds(38, 324, 409, 51);
 		panel_2_1.setBackground(colores.getVerde());
 		contentPane.add(panel_2_1);
+		panel_2_1.setLayout(null);
 
 		JLabel lblNewLabel_2_1 = new JLabel("Localizaci"+'ó'+"n:");
+		lblNewLabel_2_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_2_1.setBounds(10, 12, 134, 14);
 		lblNewLabel_2_1.setForeground(colores.getAmarillo());
 		panel_2_1.add(lblNewLabel_2_1);
 
 		choice_ubi = new Choice();
+		choice_ubi.setBounds(150, 12, 200, 20);
 		panel_2_1.add(choice_ubi);
 
 
 		// Panel para los botones
 		JPanel panel_2_1_1 = new JPanel();
 		panel_2_1_1.setBackground(new Color(64, 191, 119));
-		panel_2_1_1.setBounds(74, 387, 373, 51);
+		panel_2_1_1.setBounds(38, 387, 409, 51);
 		contentPane.add(panel_2_1_1);
 
 		button_cancelar = new JButton("Cancelar");
@@ -311,6 +330,8 @@ public class VentanaFormularioLogin extends JFrame {
 		String [] deportes = listDeportes.getSelectedItems();
 
 		persona.crearPerfil(usr, localizacion, email, password, deportes);
+		
+		JOptionPane.showMessageDialog(this, "Perfil creado correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
 
 		this.cerrarVentana();
 	}
@@ -326,11 +347,12 @@ public class VentanaFormularioLogin extends JFrame {
 		String [] deportes = listDeportes.getSelectedItems();
 
 		persona.modificarPerfil(usr, localizacion, email, password, deportes); 
-
+		
 		ventanaPerfilUsuario.setPersona(persona);
 		ventanaPerfilUsuario.eliminarItemsChoice();
 		ventanaPerfilUsuario.cargarDatos();
-
+		
+		JOptionPane.showMessageDialog(this, "Datos modificados correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
 		this.cerrarVentana();
 	}
 

@@ -186,12 +186,16 @@ public class Evento {
 		return listEventos;
 	}
 	// Rayan: Metodo que devuelve una lista de los eventos en base a la ubicacion y el deporte elegido y no incluye al usuario
-	public List<Evento> getListEventos(String Ubicacion, int idUsuario) throws SQLException {
+	public List<Evento> getListEventos(String Ubicacion, int idUsuario, int iddeporte) throws SQLException {
 
 		List<Evento> listEventos = new ArrayList<Evento>();
-		ResultSet data = command.executeQuery("((SELECT * FROM spoter.evento E WHERE E.Creador NOT IN ('" + idUsuario + "'))"
+		ResultSet data = command.executeQuery("((SELECT * FROM spoter.evento E WHERE E.ubicacion IN ('"+Ubicacion+"') "
+				+ "AND E.Deporte =" + iddeporte+ " "
+				+ "AND E.Creador NOT IN ('" + idUsuario + "'))"
 				+ " UNION "
-				+ "(SELECT id_Evento, ubicacion,numParticipantesAct,fecha,Creador,Deporte FROM spoter.evento E WHERE E.Creador NOT IN ('" + idUsuario + "')))"
+				+ "(SELECT id_Evento, ubicacion,numParticipantesAct,fecha,Creador,Deporte FROM spoter.evento E WHERE E.ubicacion IN ('"+Ubicacion+"')"
+				+ "AND E.Deporte =" + iddeporte+ " "
+				+ "AND E.Creador NOT IN ('" + idUsuario + "')))"
 				+ " ORDER BY fecha ASC;");
 		while (data.next()) {
 			Evento evento = new Evento(command, data.getInt(1), data.getString(2), data.getInt(3), data.getString(4),

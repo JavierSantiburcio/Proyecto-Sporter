@@ -30,6 +30,7 @@ public class VentanaPrincipal extends JFrame {
 	private Imagenes imagenes = new Imagenes();
 	private JButton btnCerrarSesion, btnCrearEvento, btnBuscar, lblUsuario;
 	private DefaultTableModel modelo = new DefaultTableModel();
+	private Persona persona;
 	
 	/**
 	 * Launch the application.
@@ -55,6 +56,7 @@ public class VentanaPrincipal extends JFrame {
 	public VentanaPrincipal(Persona persona) throws SQLException{
 
 		//Estetica ventana
+		this.persona = persona;
 		setResizable(false);
 		setTitle("Sporter");
 		setIconImage(imagenes.getLogo_sin_nombreEscalado(16, 16));
@@ -71,7 +73,7 @@ public class VentanaPrincipal extends JFrame {
 		btnCrearEvento.setBounds(15, 16, 117, 23);
 		btnCrearEvento.setBackground(colores.getNaranja());
 		
-		btnCerrarSesion = new JButton("Cerrar Sesion");
+		btnCerrarSesion = new JButton("Cerrar Sesi"+'ó'+"n");
 		btnCerrarSesion.setBounds(456, 16, 117, 23);
 		btnCerrarSesion.setBackground(colores.getNaranja());
 		
@@ -87,7 +89,7 @@ public class VentanaPrincipal extends JFrame {
 		textField.setBounds(136, 58, 86, 20);
 		textField.setColumns(10);
 		
-		JLabel lblIntroduzcaUbicacin = new JLabel("Introduzca Ubicaci\u00F3n:");
+		JLabel lblIntroduzcaUbicacin = new JLabel("Introduzca Ubicaci"+'ó'+"n:");
 		lblIntroduzcaUbicacin.setBounds(232, 61, 128, 14);
 		lblIntroduzcaUbicacin.setForeground(colores.getAmarillo());
 		
@@ -95,7 +97,7 @@ public class VentanaPrincipal extends JFrame {
 		textField_1.setBounds(360, 58, 90, 20);
 		textField_1.setColumns(10);
 		
-		lblUsuario = new JButton(persona.getNombre());
+		lblUsuario = new JButton();
 		lblUsuario.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblUsuario.setBounds(230, 20, 216, 14);
 		lblUsuario.setBackground(null);
@@ -115,7 +117,7 @@ public class VentanaPrincipal extends JFrame {
 		btnUnirse.setName("Unirse");
 		
 		String[] titulos = {
-				"Propietario", "Deporte", "Ubicacion", "Participantes", "fecha", " "
+				"Propietario", "Deporte", "Ubicaci"+'ó'+"n", "Participantes", "Fecha", " "
 			};
 		modelo.setColumnIdentifiers(titulos);
 		tablaEventos.setModel(modelo);
@@ -158,7 +160,15 @@ public class VentanaPrincipal extends JFrame {
 		contentPane.add(textField_1);
 		contentPane.add(btnBuscar);
 		contentPane.add(scrollPane);
+		
+		cargarNombreBoton();
 	}
+	
+	//Daniel: Metodo para cargar el nombre del botón. Hace falta para cuando se retorna de perfildeUsuario, por si hubiera alguna modificaión
+	public void cargarNombreBoton() {
+		lblUsuario.setText(persona.getNombre());
+	}
+	
 	public void controlVentanaPrincipal(ActionListener ctrl) {
 		btnCerrarSesion.addActionListener(ctrl);
 		btnCerrarSesion.setActionCommand("Cerrar Sesion");
@@ -169,6 +179,11 @@ public class VentanaPrincipal extends JFrame {
 		lblUsuario.addActionListener(ctrl);
 		lblUsuario.setActionCommand("Perfil Usuario");
 	}
+	
+	public void setPersona(Persona persona) {
+		this.persona = persona;
+	}
+	
 	public void cerrarSesion() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -203,21 +218,13 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 	}
-	public void verVentanaUsuario(Persona persona) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Conexion conexion = new Conexion();
-					command = conexion.getcommand();
-					VentanaPerfilUsuario frame = new VentanaPerfilUsuario(persona);
-					CtrlVentanaPerfilUsuario ctrl = new CtrlVentanaPerfilUsuario(frame);
-					frame.controladorVista(ctrl);
-					frame.controladorBotonesTable(ctrl);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	
+	public void verVentanaUsuario(Persona persona) throws Exception{
+		VentanaPerfilUsuario frame = new VentanaPerfilUsuario(this , persona);
+		CtrlVentanaPerfilUsuario ctrl = new CtrlVentanaPerfilUsuario(frame);
+		frame.controladorVista(ctrl);
+		frame.controladorBotonesTable(ctrl);
+		frame.setVisible(true);
+
 	}
 }

@@ -55,7 +55,7 @@ public class Deporte {
 	public int obtenerIdDeporte(String nombre) throws SQLException {
 		int idNombre;
 		
-		ResultSet data = command.executeQuery("SELECT * FROM spoter.deporte Where nombre = '" + nombre +"';");
+		ResultSet data = command.executeQuery("SELECT idDeporte FROM spoter.deporte Where nombre = '" + nombre +"';");
 		data.next();
 		idNombre = data.getInt(1);
 		

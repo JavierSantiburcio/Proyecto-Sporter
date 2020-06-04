@@ -101,8 +101,15 @@ public class Evento {
 
 	// En el diagrama ponia devolver un evento, pero he dejado esta clase como la representacion de ese evento
 	public void crearEvento(Persona persona, int deporte, String ubicacion, String fecha, int numeroParcipantes) throws SQLException {
-		
 		// Daniel: REINICIO EL CONTADOR DE CAMPO IDENTITY AL MAXIMO DE FILAS
+		if(persona == null) {
+			System.out.println("NULO persona");
+		}else if(ubicacion == null) {
+			System.out.println("NULO ubicacion");
+		}else if(fecha == null){
+			System.out.println("nulo fecha");
+		}
+		
 		ResultSet numFilas = command.executeQuery("SELECT id_Evento FROM spoter.evento");
 		int cont = 1;
 		while (numFilas.next()) {
@@ -113,6 +120,7 @@ public class Evento {
 		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`)"
 						+ " VALUES ('" + ubicacion + "', '" + numeroParcipantes + "', '" + fecha + "', '"
 						+ persona.getId() + "', '" + deporte + "');");
+		
 		this.ubicacion = ubicacion;
 		this.numeroParticipantes = numeroParcipantes;
 		this.deporte = deporte;
@@ -141,10 +149,10 @@ public class Evento {
 		}
 	}
 
-	public void borrarevento(Persona persona) throws SQLException {
-		if (organiza == persona.getId()) {
-			command.execute("delete from spoter.evento where id_Evento = " + this.id + ";");
-		}
+	public void borrarevento(Persona persona,int idEvento) throws SQLException {
+		//No compruebo si la persona es el creador porque ya lo controlo al generar el boton cancelar en la tabla
+		// para los eventos donde el usuario es el creador. Sentencia 262 en la clase VentanaPerfilUsuario
+		command.execute("delete from spoter.evento where id_Evento = " + idEvento + ";");
 	}
 
 	public void unirse(Persona persona) throws SQLException {
@@ -153,9 +161,9 @@ public class Evento {
 						+ persona.getId() + "', '" + id + "');");
 	}
 
-	public void dejarEvento(Persona persona) throws SQLException {
+	public void dejarEvento(Persona persona, int idEvento) throws SQLException {
 		command.execute("DELETE FROM `spoter`.`usuarios_has_evento` WHERE (`usuarios_idUsuarios` = '" + persona.getId()
-				+ "') and (`evento_id_Evento` = '" + id + "');");
+				+ "') and (`evento_id_Evento` = '" + idEvento + "');");
 	}
 
 	// Daniel: Metodo que devuelve una lista de los eventos de un usuario, donde es el propietario o participa en el.
@@ -208,4 +216,25 @@ public class Evento {
 		num = data.getInt(1);
 		return num;
 	}
+	
+	//Daniel: obtener el id del propietario de un evento dado su nombre. 
+	public int getIdCreador(String nombre) throws SQLException {
+		int idCreador;
+		ResultSet data = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios Where nombre = '"+ nombre +"';");
+		data.next();
+		idCreador = data.getInt(1);
+
+		return idCreador;
+	}
+
+	//Daniel: obtener el id del evento dado sus valores
+	public int getIdevento(String fechaHora, int idCreador, int idDeporte, String nombreUbicacion) throws SQLException {
+		int idEvento;
+		ResultSet data = command.executeQuery("SELECT id_Evento "
+				+ "FROM spoter.evento Where ubicacion = '"+nombreUbicacion+"' AND fecha = '"+fechaHora+"' AND Creador = "+idCreador+" AND Deporte = "+idDeporte+";");
+		data.next();
+		idEvento = data.getInt(1);
+		return idEvento;
+	}
+
 }

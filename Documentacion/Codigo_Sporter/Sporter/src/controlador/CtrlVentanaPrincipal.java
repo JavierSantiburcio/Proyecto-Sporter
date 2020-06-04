@@ -26,7 +26,12 @@ public class CtrlVentanaPrincipal implements ActionListener{
 		}else if(comando.equals("Crear Evento")) {
 			ventana.crearEvento(persona);
 		}else if(comando.equals("Perfil Usuario")) {
-			ventana.verVentanaUsuario(persona);
+			try {
+				ventana.verVentanaUsuario(persona);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 }

@@ -34,7 +34,7 @@ public class CtrlVentanaFrmLogin implements ActionListener, ItemListener{
 			}else {
 				try {
 					ventana.modificarPerfil();
-				}catch (SQLException e1){
+				}catch (Exception e1){
 					e1.printStackTrace();
 				}
 			}

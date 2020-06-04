@@ -9,7 +9,6 @@ import java.sql.SQLException;
 
 import javax.swing.JButton;
 
-import vistas.VentanaFormularioLogin;
 import vistas.VentanaPerfilUsuario;
 
 public class CtrlVentanaPerfilUsuario implements ActionListener, MouseListener{
@@ -32,7 +31,7 @@ public class CtrlVentanaPerfilUsuario implements ActionListener, MouseListener{
 		switch (comando) {
 		case "MODIFICAR":
 			try {
-				vista.nuevaVentana();
+				vista.abrirVentanaFormularioLogin();
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

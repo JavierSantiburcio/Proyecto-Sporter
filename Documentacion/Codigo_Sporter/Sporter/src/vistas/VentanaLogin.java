@@ -89,9 +89,7 @@ public class VentanaLogin extends JFrame {
 		field_usuario.setColumns(10);
 		
 		// Campos Contrasenia
-		char enie = 'ñ';
-		char n = '\u0241';
-		JLabel lblNewLabel_1 = new JLabel("Contrase"+ enie +"a:");
+		JLabel lblNewLabel_1 = new JLabel("Contrase"+'ñ'+"a:");
 		lblNewLabel_1.setBounds(0, 43, 93, 16);
 		panel_1.add(lblNewLabel_1);
 		lblNewLabel_1.setForeground(colores.getAmarillo());
@@ -107,7 +105,7 @@ public class VentanaLogin extends JFrame {
 		boton_crearUsuario.setBackground(colores.getNaranja());
 		contentPane.add(boton_crearUsuario);
 		
-		boton_iniciarSesion = new JButton("Iniciar sesión");
+		boton_iniciarSesion = new JButton("Iniciar sesi"+'ó'+"n");
 		
 		// Por defecto no está habilitado
 		boton_iniciarSesion.setEnabled(true);
@@ -136,7 +134,7 @@ public class VentanaLogin extends JFrame {
 			// Por defecto desactivado
 			panel.setVisible(error);
 		
-			JLabel lblNewLabel_3 = new JLabel("Usuario o contraseña incorrecto");
+			JLabel lblNewLabel_3 = new JLabel("Usuario o contrase"+'ñ'+"a incorrecto");
 			panel.add(lblNewLabel_3);
 		}
 	}
@@ -164,10 +162,10 @@ public class VentanaLogin extends JFrame {
 						sesion = true;
 						irVentanaPrincipal(persona);
 					}else {
-						JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos","Atención", JOptionPane.WARNING_MESSAGE, null);
+						JOptionPane.showMessageDialog(this, "Usuario o contrase"+'ñ'+"a incorrectos","Atenci"+'ó'+"n", JOptionPane.WARNING_MESSAGE, null);
 					}
 			}else {
-				JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos","Atención", JOptionPane.WARNING_MESSAGE, null);
+				JOptionPane.showMessageDialog(this, "Usuario o contrase"+'ñ'+"a incorrectos","Atenci"+'ó'+"n", JOptionPane.WARNING_MESSAGE, null);
 			}
 		}catch(RuntimeException e) {
 			Administrador administrador = new Administrador(command, field_usuario.getText());
@@ -175,10 +173,10 @@ public class VentanaLogin extends JFrame {
 				sesion = true;
 				irVentanaAdmin(administrador);
 			}else {
-				JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos","Atención", JOptionPane.WARNING_MESSAGE, null);
+				JOptionPane.showMessageDialog(this, "Usuario o contrase"+'ñ'+"a incorrectos","Atenci"+'ó'+"n", JOptionPane.WARNING_MESSAGE, null);
 			}
 		}catch(SQLException e1) {
-			JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos","Atención", JOptionPane.WARNING_MESSAGE, null);
+			JOptionPane.showMessageDialog(this, "Usuario o contrase"+'ñ'+"a incorrectos","Atenci"+'ó'+"n", JOptionPane.WARNING_MESSAGE, null);
 		}
 			
 	}
@@ -218,8 +216,7 @@ public class VentanaLogin extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Persona persona = null;
-					VentanaFormularioLogin frame = new VentanaFormularioLogin(persona, false);
+					VentanaFormularioLogin frame = new VentanaFormularioLogin(null,null,false);
 					CtrlVentanaFrmLogin ctrl = new CtrlVentanaFrmLogin(frame, false);
 					frame.controlVentana(ctrl);
 					frame.setVisible(true);

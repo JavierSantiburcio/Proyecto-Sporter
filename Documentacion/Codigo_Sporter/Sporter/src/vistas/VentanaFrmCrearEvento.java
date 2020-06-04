@@ -2,7 +2,6 @@
 
 package vistas;
 
-import java.awt.EventQueue;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -10,7 +9,6 @@ import javax.swing.border.EmptyBorder;
 
 import colores.Colores;
 import conexion.Conexion;
-import controlador.CtrlVentanaCrearEvento;
 import modelo.Deporte;
 import modelo.Evento;
 import modelo.Persona;
@@ -33,44 +31,23 @@ import java.awt.Choice;
 public class VentanaFrmCrearEvento extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private static Persona persona;
+	private Persona persona;
 	protected static Statement command;
 	private static Colores colores = new Colores();
 	private JPanel contentPane;
 	private JTextField textField_Propietario,textField_Fecha,textField_numPart, textField_Hora;
 	private JButton button_CrearEvento, button_Cancelar;
-	
 	private Choice choice_Deporte,choice_Ubicacion;
 	private JLabel lblPropietario,lblDeporte,lblUbicacion,lblFecha,lblHora,lblNumeroParticipantes;
-	
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Conexion conexion = new Conexion();
-					command = conexion.getcommand();
-					persona = new Persona(command,"DanielCP89@gmail.com");
-					VentanaFrmCrearEvento vista = new VentanaFrmCrearEvento(persona);
-					CtrlVentanaCrearEvento ctrl = new CtrlVentanaCrearEvento(vista); // Primero te creas el controlador y le metes la vista
-					vista.controlVentana(ctrl); // Segundo: el metodo de la vista controlador le metes el controlador anteriormente creado
-					vista.controlChoise(ctrl);
-					vista.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
 	
 //------------------------------------------------------------ INICIO ESTRUCTURA VENTANA ---------------------------------------------------------//
 	
 	public VentanaFrmCrearEvento(Persona persona) throws SQLException {
 		
+		Conexion conexion = new Conexion();
+		command = conexion.getcommand();
+		
+		this.persona = persona;
 		setFont(new Font("Dialog", Font.BOLD, 12));
 		setTitle("Sporter - Crear Evento Deportivo");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -156,6 +133,7 @@ public class VentanaFrmCrearEvento extends JFrame {
 		choice_Ubicacion.setBounds(33, 160, 342, 20);
 		contentPane.add(choice_Ubicacion);
 		
+		cargarNombreUsuario();
 		cargarChoiceDeporte(choice_Deporte);
 		cargarChoiceUbicacion(choice_Ubicacion);
 		cargarNumparticipantes();
@@ -185,10 +163,6 @@ public class VentanaFrmCrearEvento extends JFrame {
 //---------------------------------------------------------------- METODOS AUXILIADRES ----------------------------------------------------//
 		
 		public void crearEvento() throws SQLException {
-			
-			Conexion conexion = new Conexion();
-			command = conexion.getcommand();
-			
 			int idDeporte;
 			Deporte deporte = new Deporte(command);
 			idDeporte = deporte.obtenerIdDeporte(choice_Deporte.getSelectedItem());
@@ -208,11 +182,13 @@ public class VentanaFrmCrearEvento extends JFrame {
 			}
 		}
 		
+		//Daniel: Metodo para cargar el campo de texto nombre usuario del formulario
+		public void cargarNombreUsuario() {
+			textField_Propietario.setText(persona.getNombre());
+		}
+		
 		//M�todo para actualizar el textField_NumeroParticipantes dependiendo del Choice_Deporte seleccionado
 		public void cargarNumparticipantes() throws SQLException {
-			Conexion conexion = new Conexion();
-			command = conexion.getcommand();
-			
 			Deporte deporte = new Deporte(command);
 			String nombreDeporte = choice_Deporte.getSelectedItem();
 			int num = deporte.obtenerNumParticipanteDeporte(nombreDeporte);
@@ -221,8 +197,6 @@ public class VentanaFrmCrearEvento extends JFrame {
 		
 		//Metodo para rellenar los items del choice de deporte
 		private void cargarChoiceDeporte(Choice c) throws SQLException {
-			Conexion conexion = new Conexion();
-			command = conexion.getcommand();
 			Deporte deporte = new Deporte(command);
 			List<String> listDeporte = deporte.obtenerListaDeporte();
 			for(String item : listDeporte) {
@@ -237,7 +211,6 @@ public class VentanaFrmCrearEvento extends JFrame {
 			for(String item : listUbicacion) {
 				c.add(item);
 			}
-			
 		}
 
 		public void cerrarVentana() {

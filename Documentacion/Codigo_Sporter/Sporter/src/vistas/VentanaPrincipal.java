@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.event.ActionListener;
 import java.sql.Statement;
-import javax.swing.JTable;
+
 import javax.swing.table.DefaultTableModel;
 
 import java.sql.SQLException;
@@ -18,6 +18,7 @@ import imagenes.Imagenes;
 import modelo.*;
 import render.Render;
 import java.util.ArrayList;
+import java.util.List;
 
 public class VentanaPrincipal extends JFrame {
 	private JPanel contentPane;
@@ -25,10 +26,10 @@ public class VentanaPrincipal extends JFrame {
 	private JTextField textField_1;
 	private JTable tablaEventos;
 	protected static Statement command;
-	private ArrayList<Evento> listaEventos;
+	private List<Evento> listaEventos;
 	private static Colores colores = new Colores();
 	private Imagenes imagenes = new Imagenes();
-	private JButton btnCerrarSesion, btnCrearEvento, btnBuscar, lblUsuario;
+	private JButton btnCerrarSesion, btnCrearEvento, btnBuscar, lblUsuario, btnUnirse;
 	private DefaultTableModel modelo = new DefaultTableModel();
 	private Persona persona;
 	
@@ -55,6 +56,8 @@ public class VentanaPrincipal extends JFrame {
 	 */
 	public VentanaPrincipal(Persona persona) throws SQLException{
 
+		Conexion conexion = new Conexion();
+		command = conexion.getcommand();
 		//Estetica ventana
 		this.persona = persona;
 		setResizable(false);
@@ -105,7 +108,7 @@ public class VentanaPrincipal extends JFrame {
 		lblUsuario.setBorderPainted(false);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(34, 86, 516, 457);
+		scrollPane.setBounds(15, 86, 552, 457);
 		scrollPane.setToolTipText("");
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		
@@ -114,41 +117,31 @@ public class VentanaPrincipal extends JFrame {
 		tablaEventos.setBorder(new MatteBorder(0, 0, 1, 1, (Color) Color.WHITE));
 		tablaEventos.setShowVerticalLines(false);
 		
-		JButton btnUnirse = new JButton("Unirse");
+		btnUnirse = new JButton("Unirse");
 		btnUnirse.setName("Unirse");
-		
 		String[] titulos = {
-				"Propietario", "Deporte", "Ubicaci"+'ó'+"n", "Participantes", "Fecha", " "
+				"Propietario", "Deporte", "Ubicaci"+'ó'+"n", "Participantes", "Fecha", "Hora", " "
 			};
+		modelo = new DefaultTableModel(null,titulos){
+			
+			private static final long serialVersionUID = 1L;
+
+			public boolean isCellEditable(int filas, int columnas){
+				return false;
+			}
+		};
 		modelo.setColumnIdentifiers(titulos);
 		tablaEventos.setModel(modelo);
-		Object[] informacion = {null, null, null, null, null, btnUnirse};
-		//es funcional pero falta unirlo a mysql
-		/*
-		for(int x = 0; x < listaEventos.size(); x++){
-			informacion[0] = listaEventos.get(x).getId() + "";
-			informacion[1] = listaEventos.get(x).getDeporte() + "";
-			informacion[2] = listaEventos.get(x).getUbicacion() + "";
-			informacion[3] = listaEventos.get(x).getNumeroParticipantes() + "";
-			informacion[4] = listaEventos.get(x).getFecha() + "";
-			modelo.addRow(informacion);
-		}
-		tablaEventos.setModel(modelo);
-		*/
-		//Tabla test
-		for(int x = 0; x < 5; x++){
-			informacion[0] = "0";
-			informacion[1] = "1";
-			informacion[2] = "2";
-			informacion[3] = "3";
-			informacion[4] = "4";
-			modelo.addRow(informacion);
-		}
+		llenarTabla(persona.getLocalidad(), persona.getListDeporte(), persona.getId());
 		tablaEventos.setModel(modelo);
 		
 		tablaEventos.getTableHeader().setReorderingAllowed(false);
+		tablaEventos.setFocusable(false);
+		tablaEventos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tablaEventos.setFillsViewportHeight(false);
 		tablaEventos.setDefaultRenderer(Object.class, new Render());
 		tablaEventos.setPreferredScrollableViewportSize(tablaEventos.getPreferredSize());
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setViewportView(tablaEventos);
 		
 		contentPane.setLayout(null);
@@ -206,8 +199,6 @@ public class VentanaPrincipal extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Conexion conexion = new Conexion();
-					command = conexion.getcommand();
 					VentanaFrmCrearEvento vista = new VentanaFrmCrearEvento(persona);
 					CtrlVentanaCrearEvento ctrl = new CtrlVentanaCrearEvento(vista); // Primero te creas el controlador y le metes la vista
 					vista.controlVentana(ctrl); // Segundo: el metodo de la vista controlador le metes el controlador anteriormente creado
@@ -226,6 +217,27 @@ public class VentanaPrincipal extends JFrame {
 		frame.controladorVista(ctrl);
 		frame.controladorBotonesTable(ctrl);
 		frame.setVisible(true);
+	}
+	public void llenarTabla(String ubicacion, List<String> deportes, int idUsuario) throws SQLException{
+		List<Evento> listEventos = new ArrayList<Evento>();
+		Evento evento = new Evento(command);
+		listEventos = evento.getListEventos(ubicacion, idUsuario);
+		for(int i = 0; i < listEventos.size(); i++){
+			Object[] informacion = new Object[7];
+			String propietario = evento.getNombreUsuario(listEventos.get(i).getOrganiza(), listEventos.get(i).getId());
+			String deporte = evento.getNombreDeporte(listEventos.get(i).getDeporte(), listEventos.get(i).getId()); 
+			String date = listEventos.get(i).getFecha();
+			String fecha = date.substring(0, 10);
+			String hora = date.substring(11, 19);
 
+			informacion[0] = propietario;
+			informacion[1] = deporte;
+			informacion[2] = listEventos.get(i).getUbicacion();;
+			informacion[3] = listEventos.get(i).getNumParticipantesActivos(listEventos.get(i).getId())+ "/"+listEventos.get(i).getNumeroParticipantes();
+			informacion[4] = fecha;
+			informacion[5] = hora;
+			informacion[6] = btnUnirse;
+			modelo.addRow(informacion);
+		}
 	}
 }

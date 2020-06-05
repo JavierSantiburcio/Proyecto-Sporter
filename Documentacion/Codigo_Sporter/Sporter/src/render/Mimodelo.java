@@ -50,7 +50,7 @@ public class Mimodelo extends DefaultTableModel{
 				
 	        {
 	            public boolean isCellEditable(int row, int column){
-	            	if (column==6) {
+	            	if (column==7) {
 	                	return true;
 	                }
 					return false;

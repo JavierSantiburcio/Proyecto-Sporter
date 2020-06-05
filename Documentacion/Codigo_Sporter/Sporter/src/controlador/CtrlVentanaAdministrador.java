@@ -6,12 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.SQLException;
 
 import javax.swing.JButton;
 
 import vistas.VentanaAdministrador;
-import vistas.VentanaPerfilUsuario;
+import modelo.Administrador;
 
 
 public class CtrlVentanaAdministrador implements ActionListener, MouseListener{
@@ -21,6 +20,9 @@ public class CtrlVentanaAdministrador implements ActionListener, MouseListener{
 	
 	
 	
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public CtrlVentanaAdministrador(VentanaAdministrador v){
 		super();
 		vista = v;
@@ -41,9 +43,10 @@ public class CtrlVentanaAdministrador implements ActionListener, MouseListener{
 			}
 			break;
 
-		case "SALIR":
+		case "FILTRAR":
 			;
-			//vista.VentanaLogin();
+			
+			//vista.VentanaAdministrador(admin);
 			break;
 		}
 

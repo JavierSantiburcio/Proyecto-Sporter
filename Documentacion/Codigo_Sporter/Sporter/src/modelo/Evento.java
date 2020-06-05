@@ -156,7 +156,7 @@ public class Evento {
 		command.execute("DELETE FROM spoter.usuarios_has_evento WHERE evento_id_Evento = " + idEvento + ";");
 	}
 
-	public void unirse(Persona persona) throws SQLException {
+	public void unirse(Persona persona, int id) throws SQLException {
 		command.execute(
 				"INSERT INTO `spoter`.`usuarios_has_evento` (`usuarios_idUsuarios`, `evento_id_Evento`) VALUES ('"
 						+ persona.getId() + "', '" + id + "');");
@@ -189,13 +189,17 @@ public class Evento {
 	public List<Evento> getListEventos(String Ubicacion, int idUsuario, int iddeporte) throws SQLException {
 
 		List<Evento> listEventos = new ArrayList<Evento>();
-		ResultSet data = command.executeQuery("((SELECT * FROM spoter.evento E WHERE E.ubicacion IN ('"+Ubicacion+"') "
+		ResultSet data = command.executeQuery("((SELECT * FROM spoter.evento E "
+				+ "WHERE E.ubicacion IN ('"+Ubicacion+"') "
 				+ "AND E.Deporte =" + iddeporte+ " "
-				+ "AND E.Creador NOT IN ('" + idUsuario + "'))"
+				+ "AND E.Creador !=" + idUsuario + " "
+				+ "AND E.id_Evento NOT IN (SELECT evento_id_Evento FROM spoter.usuarios_has_evento N WHERE N.usuarios_idUsuarios =" + idUsuario + " ))"
 				+ " UNION "
-				+ "(SELECT id_Evento, ubicacion,numParticipantesAct,fecha,Creador,Deporte FROM spoter.evento E WHERE E.ubicacion IN ('"+Ubicacion+"')"
+				+ "(SELECT id_Evento, ubicacion,numParticipantesAct,fecha,Creador,Deporte FROM spoter.evento E "
+				+ "WHERE E.ubicacion IN ('"+Ubicacion+"') "
 				+ "AND E.Deporte =" + iddeporte+ " "
-				+ "AND E.Creador NOT IN ('" + idUsuario + "')))"
+				+ "AND E.Creador !=" + idUsuario + " "
+				+ "AND E.id_Evento NOT IN (SELECT evento_id_Evento FROM spoter.usuarios_has_evento N WHERE N.usuarios_idUsuarios =" + idUsuario + " )))"
 				+ " ORDER BY fecha ASC;");
 		while (data.next()) {
 			Evento evento = new Evento(command, data.getInt(1), data.getString(2), data.getInt(3), data.getString(4),

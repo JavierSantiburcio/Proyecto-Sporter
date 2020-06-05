@@ -3,6 +3,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.sql.Statement;
 
 import javax.swing.table.DefaultTableModel;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class VentanaPrincipal extends JFrame {
 	private JPanel contentPane;
-	private JTable tablaEventos;
+	public JTable tablaEventos;
 	private Choice choice_Deporte,choice_Ubicacion;
 	protected static Statement command;
 	private static Colores colores = new Colores();
@@ -37,7 +38,7 @@ public class VentanaPrincipal extends JFrame {
 		command = conexion.getcommand();
 		
 		//Estetica ventana
-		this.persona = persona;
+		setPersona(persona);
 		setResizable(false);
 		setTitle("Sporter");
 		setIconImage(imagenes.getLogo_sin_nombreEscalado(16, 16));
@@ -106,12 +107,10 @@ public class VentanaPrincipal extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 86, 582, 457);
 		scrollPane.setToolTipText("");
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		contentPane.add(scrollPane);
 
-		tablaEventos = new JTable();
-		tablaEventos.setBorder(new MatteBorder(0, 0, 1, 1, (Color) Color.WHITE));
-		tablaEventos.setShowVerticalLines(false);
 		
 		btnUnirse = new JButton("Unirse");
 		btnUnirse.setName("Unirse");
@@ -126,25 +125,23 @@ public class VentanaPrincipal extends JFrame {
 				return false;
 			}
 		};
-		modelo.setColumnIdentifiers(titulos);
+		
+		tablaEventos = new JTable();
 		tablaEventos.setModel(modelo);
-		
-		llenarTabla(persona.getLocalidad(), persona.getListDeporte(), persona.getId());
-		
-		tablaEventos.setModel(modelo);
-		
+		tablaEventos.setBackground(Color.WHITE);
+		tablaEventos.setShowVerticalLines(false);
 		tablaEventos.getTableHeader().setReorderingAllowed(false);
 		tablaEventos.setFocusable(false);
 		tablaEventos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tablaEventos.setFillsViewportHeight(false);
 		tablaEventos.setDefaultRenderer(Object.class, new Render());
 		tablaEventos.setPreferredScrollableViewportSize(tablaEventos.getPreferredSize());
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setViewportView(tablaEventos);
 		
 		cargarNombreBoton();
 		cargarChoiceDeporte(choice_Deporte);
 		cargarChoiceUbicacion(choice_Ubicacion);
+		llenarTabla(persona.getLocalidad(), persona.getListDeporte(), persona.getId());
 	}
 	
 	//Daniel: Metodo para cargar el nombre del botón. Hace falta para cuando se retorna de perfildeUsuario, por si hubiera alguna modificaión
@@ -164,6 +161,12 @@ public class VentanaPrincipal extends JFrame {
 		
 		btnBuscar.addActionListener(ctrl);
 		btnBuscar.setActionCommand("Buscar Evento");
+		
+		btnUnirse.addActionListener(ctrl);
+		btnUnirse.setActionCommand("Unirse");
+	}
+	public void controladorBotonesTable(MouseListener ctrl) {
+		tablaEventos.addMouseListener(ctrl);
 	}
 	//Metodo para rellenar los items del choice de deporte
 	private void cargarChoiceDeporte(Choice c) throws SQLException {
@@ -204,7 +207,7 @@ public class VentanaPrincipal extends JFrame {
 			}
 		});
 	}
-	public void crearEvento(Persona persona) {
+	public void crearEvento() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -220,7 +223,7 @@ public class VentanaPrincipal extends JFrame {
 		});
 	}
 	
-	public void verVentanaUsuario(Persona persona) throws Exception{
+	public void verVentanaUsuario() throws Exception{
 		VentanaPerfilUsuario frame = new VentanaPerfilUsuario(this , persona);
 		CtrlVentanaPerfilUsuario ctrl = new CtrlVentanaPerfilUsuario(frame);
 		frame.controladorVista(ctrl);
@@ -274,6 +277,32 @@ public class VentanaPrincipal extends JFrame {
 			informacion[5] = hora;
 			informacion[6] = btnUnirse;
 			modelo.addRow(informacion);
+		}
+	}
+	public void Unirse() throws SQLException{
+		String nombrePropietario = (String) tablaEventos.getModel().getValueAt(tablaEventos.getSelectedRow(), 0);
+		String nombreDeporte = (String) tablaEventos.getModel().getValueAt(tablaEventos.getSelectedRow(), 1);
+		String nombreUbicacion = (String) tablaEventos.getModel().getValueAt(tablaEventos.getSelectedRow(), 2);
+		String fecha = (String) tablaEventos.getModel().getValueAt(tablaEventos.getSelectedRow(), 4);
+		String hora = (String) tablaEventos.getModel().getValueAt(tablaEventos.getSelectedRow(), 5);
+		
+		String fechaHora = fecha + " " + hora; 
+		
+		Deporte deporte = new Deporte(command);
+		int idDeporte = deporte.obtenerIdDeporte(nombreDeporte);
+		int numParticipantes = deporte.obtenerNumParticipanteDeporte(nombreDeporte);
+		
+		Evento evento = new Evento(command);
+		int idEvento = evento.getIdeventoUnido(fechaHora,nombrePropietario,idDeporte,nombreUbicacion);
+		int numParticipantesActivo = evento.getNumParticipantesActivos(idEvento);
+		
+		if(numParticipantes == numParticipantesActivo) {
+			JOptionPane.showMessageDialog(this, "Evento Lleno","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
+		}else {
+			evento.unirse(persona, idEvento);
+			modelo.removeRow(tablaEventos.getSelectedRow());
+			JOptionPane.showMessageDialog(this, "Te has unido al evento\n"
+					+ "Podr"+'á'+" visualizarlo desde su perfil.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
 		}
 	}
 }

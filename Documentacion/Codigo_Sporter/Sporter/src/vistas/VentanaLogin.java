@@ -208,7 +208,8 @@ public class VentanaLogin extends JFrame {
 				try {
 					dispose();
 					VentanaPrincipal frame = new VentanaPrincipal(persona);
-					CtrlVentanaPrincipal ctrl = new CtrlVentanaPrincipal(frame, persona);
+					CtrlVentanaPrincipal ctrl = new CtrlVentanaPrincipal(frame);
+					frame.controladorBotonesTable(ctrl);
 					frame.controlVentanaPrincipal(ctrl);
 					frame.setVisible(true);
 				} catch (Exception e) {

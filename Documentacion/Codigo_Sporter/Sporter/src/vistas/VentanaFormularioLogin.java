@@ -322,19 +322,31 @@ public class VentanaFormularioLogin extends JFrame {
 	// Metodo encargado de crear el perfil de usuario en la base de datos
 
 	public void crearPerfil() throws SQLException {
-		String usr = textUsr.getText();
-		String email = textEmail.getText();
-		localizacion = choice_ubi.getSelectedItem();
-		@SuppressWarnings("deprecation")
-		String password = passwordField.getText();
-		Persona persona = new Persona(comando);  
-		String [] deportes = listDeportes.getSelectedItems();
-
-		persona.crearPerfil(usr, localizacion, email, password, deportes);
-		
-		JOptionPane.showMessageDialog(this, "Perfil creado correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
-
-		this.cerrarVentana();
+		try{
+			String usr = textUsr.getText();
+			String email = textEmail.getText();
+			localizacion = choice_ubi.getSelectedItem();
+			@SuppressWarnings("deprecation")
+			String password = passwordField.getText();
+			Persona persona = new Persona(comando);  
+			String [] deportes = listDeportes.getSelectedItems();
+			
+			persona.crearPerfil(usr, localizacion, email, password, deportes);
+			
+			JOptionPane.showMessageDialog(this, "Perfil creado correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
+			
+			this.cerrarVentana();
+			
+		}catch(SQLException e) {
+			
+			JOptionPane.showMessageDialog(this, "Falta por rellenar algún campo","Atenci"+'ó'+"n", JOptionPane.WARNING_MESSAGE, null);
+			
+		}catch (RuntimeException e){
+			
+			JOptionPane.showMessageDialog(this, "Email ya registrado en la base de datos","Atenci"+'ó'+"n", JOptionPane.WARNING_MESSAGE, null);
+			
+			
+		}
 	}
 
 

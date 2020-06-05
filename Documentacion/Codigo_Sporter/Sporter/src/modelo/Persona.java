@@ -84,7 +84,8 @@ public class Persona extends Usuario{
 	}
 	
 	public void crearPerfil(String nombre,String localidad,String email,String password, String [] deportes) throws SQLException {
-		if(existente) throw new RuntimeException("Un usuario que existe no puede crear otro usuario");
+//		if(existente) throw new RuntimeException("Un usuario que existe no puede crear otro usuario");
+		if(estaEmail(email)) throw new RuntimeException("Email ya registrado en la base de datos");
 		
 		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES "
 				+ "('"+ nombre +"', '"+ email +"', '"+ password +"', '"+ 0 +"', '"+ localidad +"');");
@@ -107,6 +108,13 @@ public class Persona extends Usuario{
 		 
 	}
 	
+	private boolean estaEmail(String email) throws SQLException {
+		ResultSet data;
+		data = command.executeQuery("SELECT nombre from spoter.usuarios where email = '" + email + "';");
+		
+		return data.next();
+	}
+
 	public void meterDeporte(int deporte) throws SQLException {
 		// TODO Auto-generated method stub
 		if(!existente) throw new RuntimeException("Un usuario que no existe no puede tener ni a�adir deportes");

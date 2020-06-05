@@ -47,7 +47,7 @@ public class Pruebas {
 		res.next();
 		String[] deportes = {};
 		
-		persona.crearPerfil("a", "a", "a", "a", deportes);
+		persona.crearPerfil("a", "a", "a", "a", deportes, null);
 		
 		res = command.executeQuery("select count(*) from spoter.usuarios;");
 		res.next();
@@ -68,7 +68,7 @@ public class Pruebas {
 		assertEquals(res.getString(6), persona.getLocalidad());
 		
 		Persona persona2 = new Persona(command);
-		persona2.crearPerfil("b", "b", "b", "b", deportes);
+		persona2.crearPerfil("b", "b", "b", "b", deportes,null);
 		
 		res = command.executeQuery("select count(*) from spoter.usuarios;");
 		res.next();
@@ -83,7 +83,7 @@ public class Pruebas {
 		res.next();
 		String [] deportes2 = {};
 		persona2 = new Persona(command,persona2.getId());
-		persona2.modificarPerfil("c", "d","b","f",deportes2);
+		persona2.modificarPerfil("c", "d","b","f",deportes2,null);
 		
 		res = command.executeQuery("select nombre,localidad from spoter.usuarios where email = '"+persona2.getEmail()+"';");
 		res.next();
@@ -268,10 +268,10 @@ public class Pruebas {
 		res.next();
 		int numero = res.getInt(1);
 		
-		evento.unirse(persona);
+		evento.unirse(persona, evento.getId());
 		
 		res = command.executeQuery("SELECT Count(*) FROM spoter.usuarios_has_evento where evento_id_Evento = "+id+";");
-		res.next();
+		res.next(); 
 		
 		//Se ha aumentado en uno el numero de participantes en este evento
 		assertEquals(res.getInt(1), numero + 1 );

@@ -8,7 +8,7 @@ import java.util.List;
 public class Persona extends Usuario{
 	
 	private int id;
-	private String localidad;
+	private String localidad, url;
 	private boolean existente;
 	public ArrayList<Integer> participa = new ArrayList<Integer>();
 	public ArrayList<Integer> practica = new ArrayList<Integer>();
@@ -18,19 +18,21 @@ public class Persona extends Usuario{
 		id = -1;
 		localidad = null;
 		participa = null;
+		url = null;
 		existente = false;
 	}
 	
 	public Persona(Statement command, int id) throws SQLException {
 		super(command, id);
 		this.id = id;
+		
 		if(getAdmin()) {
 			throw new RuntimeException("Es admin");
 		}
-		ResultSet data = command.executeQuery("Select localidad from spoter.usuarios user where user.idUsuarios ="+ 1 +";");
+		ResultSet data = command.executeQuery("Select localidad, url from spoter.usuarios user where user.idUsuarios ="+ 1 +";");
 		data.next();
 		localidad = data.getString(1);
-		
+		url = data.getString(2);
 		data = command.executeQuery("SELECT evento_id_Evento FROM spoter.usuarios_has_evento where usuarios_idUsuarios = "+id+"; ");
 		while(data.next()) participa.add(data.getInt(1));
 		
@@ -49,6 +51,7 @@ public class Persona extends Usuario{
 		data.next();
 		id = data.getInt(1);
 		localidad = data.getString(6);
+		url = data.getString(7);
 		
 		data = command.executeQuery("SELECT evento_id_Evento FROM spoter.usuarios_has_evento where usuarios_idUsuarios = "+ id +"; ");
 		while(data.next()) participa.add(data.getInt(1));
@@ -61,18 +64,22 @@ public class Persona extends Usuario{
 	public int getId() {
 		return id;
 	}
+	public String getUrl() {
+		return url;
+	}
 
 	public String getLocalidad() {
 		return localidad;
 	}
 	
-	public void modificarPerfil(String nombre, String localidad, String email, String password, String [] deportes) throws SQLException {
+	public void modificarPerfil(String nombre, String localidad, String email, String password, String [] deportes, String url) throws SQLException {
 		if(!existente) throw new RuntimeException("Un usuario que no existe no se modifica");
-		command.execute("UPDATE `spoter`.`usuarios` SET `nombre` = '"+nombre+"', `localidad` = '"+localidad+"',`password` = '"+ password +"' WHERE (`email` = '"+email+"');");
+		command.execute("UPDATE `spoter`.`usuarios` SET `nombre` = '"+nombre+"', `localidad` = '"+localidad+"',`password` = '"+ password +"' , `url` = '" + url +"'  WHERE (`email` = '"+email+"');");
 		
 		this.nombre = nombre;
 		this.localidad = localidad;
 		this.password = password;
+		this.url = url;
 		
 		command.execute("DELETE from `spoter`.`usuarios_has_deporte` WHERE (`usuarios_idUsuarios` = " +id+ ");"); // NO ME BORRES POR FAVOR :o
 		
@@ -83,17 +90,26 @@ public class Persona extends Usuario{
 		
 	}
 	
-	public void crearPerfil(String nombre,String localidad,String email,String password, String [] deportes) throws SQLException {
+	public void crearPerfil(String nombre,String localidad,String email,String password, String [] deportes, String url) throws SQLException {
 //		if(existente) throw new RuntimeException("Un usuario que existe no puede crear otro usuario");
 		if(estaEmail(email)) throw new RuntimeException("Email ya registrado en la base de datos");
 		
-		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad`) VALUES "
-				+ "('"+ nombre +"', '"+ email +"', '"+ password +"', '"+ 0 +"', '"+ localidad +"');");
+		//Daniel : Resetear contador al numero de filas
+		ResultSet numFilas = command.executeQuery("SELECT idUsuarios FROM spoter.usuarios");
+		int cont = 1;
+		while (numFilas.next()) {
+			cont++;
+		}
+		command.execute("ALTER TABLE spoter.usuarios AUTO_INCREMENT=" + cont + ";");
+		
+		command.execute("INSERT INTO `spoter`.`usuarios` (`nombre`, `email`, `password`, `admin`, `localidad` , `url`) VALUES "
+				+ "('"+ nombre +"', '"+ email +"', '"+ password +"', '"+ 0 +"', '"+ localidad +"' , '" + url + "');");
 		
 		this.localidad = localidad;this.nombre = nombre;this.email = email;this.password = password;
 		ResultSet data = command.executeQuery("Select idUsuarios from spoter.usuarios order by idUsuarios desc;");
 		data.next();
 		id = data.getInt(1);
+		this.url = url;
 		
 		
 		existente = !existente;

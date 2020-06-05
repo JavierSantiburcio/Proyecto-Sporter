@@ -27,15 +27,20 @@ public class VentanaPrincipal extends JFrame {
 	private Choice choice_Deporte,choice_Ubicacion;
 	protected static Statement command;
 	private static Colores colores = new Colores();
-	private Imagenes imagenes = new Imagenes();
-	private JButton btnCerrarSesion, btnCrearEvento, btnBuscar, lblUsuario, btnUnirse;
+	private Imagenes imagenes;
+	private JLabel lbl_IconoPerfil;
+	private JButton btnCerrarSesion, btnCrearEvento, btnBuscar, btn_Usuario, btnUnirse;
 	private DefaultTableModel modelo = new DefaultTableModel();
 	private Persona persona;
+	private JPanel panel;
+	private JPanel panel_1;
 
 	public VentanaPrincipal(Persona persona) throws SQLException{
+		
 		//Conectar a MySQL
 		Conexion conexion = new Conexion();
 		command = conexion.getcommand();
+		imagenes = new Imagenes(persona.getUrl());
 		
 		//Estetica ventana
 		setPersona(persona);
@@ -45,7 +50,7 @@ public class VentanaPrincipal extends JFrame {
 		setForeground(colores.getNaranja());
 		setBackground(colores.getNaranja());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 623, 612);
+		setBounds(100, 100, 892, 692);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(colores.getVerde());
@@ -53,59 +58,82 @@ public class VentanaPrincipal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		//Botones
-		
-		btnCrearEvento = new JButton("Crear Evento");
-		btnCrearEvento.setBounds(15, 16, 117, 23);
-		btnCrearEvento.setBackground(colores.getNaranja());
-		contentPane.add(btnCrearEvento);
-		
-		btnCerrarSesion = new JButton("Cerrar Sesi"+'ó'+"n");
-		btnCerrarSesion.setBounds(472, 16, 120, 23);
-		btnCerrarSesion.setBackground(colores.getNaranja());
-		contentPane.add(btnCerrarSesion);
+		panel_1 = new JPanel();
+		panel_1.setBackground(new Color(46, 139, 87));
+		panel_1.setBounds(38, 104, 813, 49);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
 		
 		btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(489, 57, 103, 23);
+		btnBuscar.setBounds(700, 11, 103, 23);
+		panel_1.add(btnBuscar);
 		btnBuscar.setBackground(colores.getNaranja());
-		contentPane.add(btnBuscar);
+		
+		choice_Ubicacion = new Choice();
+		choice_Ubicacion.setBounds(504, 14, 166, 20);
+		panel_1.add(choice_Ubicacion);
+		cargarChoiceUbicacion(choice_Ubicacion);
 		
 		//Opciones Busqueda
 	
 		JLabel lblIntroduzcaDeporte = new JLabel("Introduzca Deporte:");
-		lblIntroduzcaDeporte.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		lblIntroduzcaDeporte.setBounds(15, 61, 97, 14);
+		lblIntroduzcaDeporte.setBounds(10, 14, 141, 20);
+		panel_1.add(lblIntroduzcaDeporte);
+		lblIntroduzcaDeporte.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblIntroduzcaDeporte.setForeground(colores.getAmarillo());
 		
 		choice_Deporte = new Choice();
-		choice_Deporte.setBounds(113, 58, 109, 20);
+		choice_Deporte.setBounds(157, 14, 166, 20);
+		panel_1.add(choice_Deporte);
+		cargarChoiceDeporte(choice_Deporte);
 		
 		JLabel lblIntroduzcaUbicacin = new JLabel("Introduzca Ubicaci"+'ó'+"n:");
-		lblIntroduzcaUbicacin.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		lblIntroduzcaUbicacin.setBounds(228, 61, 103, 14);
+		lblIntroduzcaUbicacin.setBounds(357, 14, 141, 20);
+		panel_1.add(lblIntroduzcaUbicacin);
+		lblIntroduzcaUbicacin.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblIntroduzcaUbicacin.setForeground(colores.getAmarillo());
 		
-		choice_Ubicacion = new Choice();
-		choice_Ubicacion.setBounds(332, 58, 153, 20);
-
-		contentPane.add(choice_Ubicacion);
-		contentPane.add(lblIntroduzcaDeporte);
-		contentPane.add(choice_Deporte);
-		contentPane.add(lblIntroduzcaUbicacin);
+		panel = new JPanel();
+		panel.setBackground(new Color(46, 139, 87));
+		panel.setBounds(38, 11, 813, 65);
+		contentPane.add(panel);
+		panel.setLayout(null);
 		
 		//Nombre Usuario
 		
-		lblUsuario = new JButton();
-		lblUsuario.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblUsuario.setBounds(246, 20, 216, 14);
-		lblUsuario.setBackground(null);
-		lblUsuario.setBorderPainted(false);
-		contentPane.add(lblUsuario);
+		btn_Usuario = new JButton();
+		btn_Usuario.setVerticalAlignment(SwingConstants.BOTTOM);
+		btn_Usuario.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
+		btn_Usuario.setHorizontalAlignment(SwingConstants.LEFT);
+		btn_Usuario.setBounds(79, 35, 188, 24);
+		btn_Usuario.setBackground(new Color(46, 139, 87));
+		panel.add(btn_Usuario);
+		
+		
+		
+		lbl_IconoPerfil = new JLabel("");
+		lbl_IconoPerfil.setBounds(10, 8, 59, 51);
+		int w = lbl_IconoPerfil.getWidth();
+		int h = lbl_IconoPerfil.getHeight();
+		lbl_IconoPerfil.setIcon( new ImageIcon(imagenes.getIconoPerfilEscalado(w, h)));
+		panel.add(lbl_IconoPerfil);
+		
+		btnCerrarSesion = new JButton("Cerrar Sesi"+'ó'+"n");
+		btnCerrarSesion.setBounds(287, 35, 120, 23);
+		panel.add(btnCerrarSesion);
+		btnCerrarSesion.setBackground(colores.getNaranja());
+		
+		//Botones
+		
+		btnCrearEvento = new JButton("Crear Evento");
+		btnCrearEvento.setBounds(686, 35, 117, 23);
+		panel.add(btnCrearEvento);
+		btnCrearEvento.setBackground(colores.getNaranja());
 		
 		//Tabla Eventos
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 86, 582, 457);
+		scrollPane.setBounds(38, 164, 813, 465);
 		scrollPane.setToolTipText("");
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -115,7 +143,7 @@ public class VentanaPrincipal extends JFrame {
 		btnUnirse = new JButton("Unirse");
 		btnUnirse.setName("Unirse");
 		String[] titulos = {
-				"Propietario", "Deporte", "Ubicaci"+'ó'+"n", "Participantes", "Fecha", "Hora", " "
+				"PROPIETARIO", "DEPORTE", "UBICACI"+'Ó'+"N", "PARTICIPANTES", "FECHA", "HORA", " "
 			};
 		modelo = new DefaultTableModel(null,titulos){
 			
@@ -139,14 +167,17 @@ public class VentanaPrincipal extends JFrame {
 		scrollPane.setViewportView(tablaEventos);
 		
 		cargarNombreBoton();
-		cargarChoiceDeporte(choice_Deporte);
-		cargarChoiceUbicacion(choice_Ubicacion);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(0, 87, 886, 4);
+		contentPane.add(separator);
+		
 		llenarTabla(persona.getLocalidad(), persona.getListDeporte(), persona.getId());
 	}
 	
 	//Daniel: Metodo para cargar el nombre del botón. Hace falta para cuando se retorna de perfildeUsuario, por si hubiera alguna modificaión
 	public void cargarNombreBoton() {
-		lblUsuario.setText(persona.getNombre());
+		btn_Usuario.setText(persona.getNombre());
 	}
 	
 	public void controlVentanaPrincipal(ActionListener ctrl) {
@@ -156,8 +187,8 @@ public class VentanaPrincipal extends JFrame {
 		btnCrearEvento.addActionListener(ctrl);
 		btnCrearEvento.setActionCommand("Crear Evento");
 		
-		lblUsuario.addActionListener(ctrl);
-		lblUsuario.setActionCommand("Perfil Usuario");
+		btn_Usuario.addActionListener(ctrl);
+		btn_Usuario.setActionCommand("Perfil Usuario");
 		
 		btnBuscar.addActionListener(ctrl);
 		btnBuscar.setActionCommand("Buscar Evento");
@@ -168,6 +199,15 @@ public class VentanaPrincipal extends JFrame {
 	public void controladorBotonesTable(MouseListener ctrl) {
 		tablaEventos.addMouseListener(ctrl);
 	}
+	
+	public void cargarImagenPerfil() {
+		imagenes = new Imagenes(persona.getUrl());
+		int w = lbl_IconoPerfil.getWidth();
+		int h = lbl_IconoPerfil.getHeight();
+		lbl_IconoPerfil.setIcon( new ImageIcon(imagenes.getIconoPerfilEscalado(w, h)));
+	}
+	
+	
 	//Metodo para rellenar los items del choice de deporte
 	private void cargarChoiceDeporte(Choice c) throws SQLException {
 		Deporte deporte = new Deporte(command);

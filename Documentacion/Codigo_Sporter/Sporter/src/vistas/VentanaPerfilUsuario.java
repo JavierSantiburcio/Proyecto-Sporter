@@ -30,10 +30,12 @@ import javax.swing.SwingConstants;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import javax.swing.ScrollPaneConstants;
 import java.awt.Choice;
+import javax.swing.border.LineBorder;
 
 
 public class VentanaPerfilUsuario extends JFrame{
@@ -44,13 +46,16 @@ public class VentanaPerfilUsuario extends JFrame{
 	private Persona persona;
 	protected static Statement command;
 	private static Colores colores = new Colores();
-	private Imagenes imagenes = new Imagenes();
+	private Imagenes imagenes;
 	public JTable table;
 	private JButton btn_ModificarPerfil, btnReturn,btnCancelar,btnSalir;
 	private DefaultTableModel modeloTabla;
 	private JLabel lblNewLabel;
 	private Choice choiceDeportes;
 	private VentanaPrincipal ventanaPrincipal;
+	private JPanel panel;
+	private JPanel panel_1;
+	private JLabel lbl_Sporter;
 
 	
 //------------------------------------------------------- INICIO ESTRUCTURA VISTA ------------------------------------------------//
@@ -61,10 +66,11 @@ public class VentanaPerfilUsuario extends JFrame{
 		command = conexion.getcommand();
 		this.persona = persona;
 		this.ventanaPrincipal = vista;
+		this.imagenes = new Imagenes(persona.getUrl());
 		
 		setTitle("Sporter - Perfil Usuario");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 970, 517);
+		setBounds(100, 100, 973, 569);
 		setLocationRelativeTo(vista);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -72,61 +78,89 @@ public class VentanaPerfilUsuario extends JFrame{
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		panel = new JPanel();
+		panel.setBackground(new Color(46, 139, 87));
+		panel.setBounds(10, 11, 921, 68);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
 		lbl_Icono = new JLabel("");
-		lbl_Icono.setBounds(24, 11, 30, 23);
+		lbl_Icono.setBounds(10, 6, 66, 55);
+		panel.add(lbl_Icono);
 		int w = lbl_Icono.getWidth();
 		int h = lbl_Icono.getHeight();
-		lbl_Icono.setIcon(new ImageIcon(imagenes.getIconoUsuarioEscalado(w, h)));
-		contentPane.add(lbl_Icono);
+		lbl_Icono.setIcon(new ImageIcon(imagenes.getIconoPerfilEscalado(w, h)));
 		
 		lbl_NombreUsuario = new JLabel();
-		lbl_NombreUsuario.setBounds(64, 11, 241, 23);
-		contentPane.add(lbl_NombreUsuario);
+		lbl_NombreUsuario.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lbl_NombreUsuario.setBounds(86, 38, 241, 23);
+		panel.add(lbl_NombreUsuario);
 		
 		btn_ModificarPerfil = new JButton("Modificar Perfil");
-		btn_ModificarPerfil.setBounds(788, 11, 143, 23);
+		btn_ModificarPerfil.setBounds(768, 22, 143, 23);
+		panel.add(btn_ModificarPerfil);
 		btn_ModificarPerfil.setBackground(colores.getNaranja());
-		contentPane.add(btn_ModificarPerfil);
+		
+		lbl_Sporter = new JLabel("");
+		lbl_Sporter.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_Sporter.setBounds(362, -90, 186, 151);
+		w = lbl_Sporter.getWidth();
+		h = lbl_Sporter.getHeight();
+		lbl_Sporter.setIcon(new ImageIcon(imagenes.getLogo_solo_nombreEscalado(w, h)));
+		panel.add(lbl_Sporter);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(0, 45, 954, 9);
+		separator.setBounds(0, 87, 964, 14);
 		contentPane.add(separator);
 		
+		panel_1 = new JPanel();
+		panel_1.setBackground(new Color(46, 139, 87));
+		panel_1.setBounds(10, 105, 921, 66);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		
 		lblLocalidad = new JLabel("Localidad:");
+		lblLocalidad.setBounds(10, 33, 65, 23);
+		panel_1.add(lblLocalidad);
 		lblLocalidad.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblLocalidad.setBounds(10, 81, 65, 23);
 		lblLocalidad.setForeground(colores.getAmarillo());
-		contentPane.add(lblLocalidad);
 		
 		lblDeporte = new JLabel("Deportes:");
+		lblDeporte.setBounds(290, 33, 72, 23);
+		panel_1.add(lblDeporte);
 		lblDeporte.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblDeporte.setBounds(301, 81, 72, 23);
 		lblDeporte.setForeground(colores.getAmarillo());
-		contentPane.add(lblDeporte);
 		
 		choiceDeportes = new Choice();
+		choiceDeportes.setBounds(368, 34, 205, 22);
+		panel_1.add(choiceDeportes);
 		choiceDeportes.setFont(new Font("Dialog", Font.BOLD, 12));
-		choiceDeportes.setBounds(379, 81, 205, 23);
-		contentPane.add(choiceDeportes);
 		
 		lblEmail = new JLabel("Email:");
+		lblEmail.setBounds(650, 33, 45, 23);
+		panel_1.add(lblEmail);
 		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblEmail.setBounds(661, 81, 45, 23);
 		lblEmail.setForeground(colores.getAmarillo());
-		contentPane.add(lblEmail);
 		
 		lbl_InfoLocalidad = new JLabel("New label");
-		lbl_InfoLocalidad.setBounds(85, 81, 108, 23);
-		contentPane.add(lbl_InfoLocalidad);
+		lbl_InfoLocalidad.setBounds(81, 34, 108, 23);
+		panel_1.add(lbl_InfoLocalidad);
 		
 		lbl_InfoEmail = new JLabel("New label");
-		lbl_InfoEmail.setBounds(716, 81, 215, 23);
-		contentPane.add(lbl_InfoEmail);
+		lbl_InfoEmail.setBounds(706, 34, 205, 23);
+		panel_1.add(lbl_InfoEmail);
+		
+		lblNewLabel = new JLabel("Datos Usuario");
+		lblNewLabel.setBounds(0, 11, 921, 14);
+		panel_1.add(lblNewLabel);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
+		lblNewLabel.setForeground(colores.getAmarillo());
 		
 		lblHistorial = new JLabel("Historial de Eventos");
 		lblHistorial.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblHistorial.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHistorial.setBounds(24, 153, 909, 14);
+		lblHistorial.setBounds(22, 202, 909, 14);
 		lblHistorial.setForeground(colores.getAmarillo());
 		contentPane.add(lblHistorial);
 		
@@ -136,7 +170,7 @@ public class VentanaPerfilUsuario extends JFrame{
 		btnSalir = new JButton("Salir");
 		btnSalir.setName("s");
 		
-		String t[] ={"FECHA","HORA","PROPIETARIO","DEPORTE","UBICACI"+'Ó'+"N","N"+'º'+"PARTICIPANTES",""}; //Almaceno las columnas en el DefaultTableModel y hago que no sean editable las celdas
+		String t[] ={"FECHA","HORA","PROPIETARIO","DEPORTE","UBICACI"+'Ó'+"N","N"+'º'+" PARTICIPANTES",""}; //Almaceno las columnas en el DefaultTableModel y hago que no sean editable las celdas
 		modeloTabla = new DefaultTableModel(null,t){
 	
 			private static final long serialVersionUID = 1L;
@@ -166,24 +200,17 @@ public class VentanaPerfilUsuario extends JFrame{
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setBounds(24, 178, 909, 197);
+		scrollPane_1.setBounds(24, 227, 909, 225);
 		scrollPane_1.setViewportView(table);
 		contentPane.add(scrollPane_1);
 		
 		btnReturn = new JButton("Volver al tabl"+'ó'+"n");
-		btnReturn.setBounds(379, 400, 205, 23);
+		btnReturn.setBounds(379, 480, 205, 23);
 		btnReturn.setBackground(colores.getNaranja());
 		contentPane.add(btnReturn);
 		
-		lblNewLabel = new JLabel("Datos Usuario");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 16));
-		lblNewLabel.setBounds(10, 56, 954, 14);
-		lblNewLabel.setForeground(colores.getAmarillo());
-		contentPane.add(lblNewLabel);
-		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(0, 110, 954, 9);
+		separator_1.setBounds(0, 182, 957, 9);
 		contentPane.add(separator_1);
 		
 		cargarDatos();
@@ -222,6 +249,14 @@ public class VentanaPerfilUsuario extends JFrame{
 		
 //----------------------------------------------------------------- METODOS AUXILIARES --------------------------------------------------------------//	
 	
+		
+		public void cargarImagenPerfil() {
+			imagenes = new Imagenes(persona.getUrl());
+			int w = lbl_Icono.getWidth();
+			int h = lbl_Icono.getHeight();
+			lbl_Icono.setIcon(new ImageIcon(imagenes.getIconoPerfilEscalado(w, h)));
+		}
+
 	//Metodo para cargar los datos de los JLabel
 	public void cargarDatos() throws SQLException {
 		lbl_NombreUsuario.setText(persona.getNombre());
@@ -273,6 +308,7 @@ public class VentanaPerfilUsuario extends JFrame{
 	public void volver() {
 		ventanaPrincipal.setPersona(persona);
 		ventanaPrincipal.cargarNombreBoton();
+		ventanaPrincipal.cargarImagenPerfil();
 		this.dispose();
 		
 	}
@@ -304,7 +340,7 @@ public class VentanaPerfilUsuario extends JFrame{
 	}
 
 	public void salirEvento() throws SQLException {
-
+		
 		String fecha = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
 		String hora = (String) table.getModel().getValueAt(table.getSelectedRow(), 1);
 		String nombrePropietario = (String) table.getModel().getValueAt(table.getSelectedRow(), 2);
@@ -331,3 +367,4 @@ public class VentanaPerfilUsuario extends JFrame{
 	}
 //----------------------------------------------------------------- FIN  METODOS AUXILIARES ---------------------------------------------------------------------------//	
 }
+

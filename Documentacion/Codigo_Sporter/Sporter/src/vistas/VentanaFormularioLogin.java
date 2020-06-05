@@ -61,6 +61,7 @@ public class VentanaFormularioLogin extends JFrame {
 	private Persona persona;
 	private boolean modificar;
 	private VentanaPerfilUsuario ventanaPerfilUsuario;
+	private JTextField textField_url;
 
 
 	public VentanaFormularioLogin(VentanaPerfilUsuario vista, Persona persona, boolean modificar) throws SQLException{
@@ -76,7 +77,7 @@ public class VentanaFormularioLogin extends JFrame {
 		setForeground(colores.getNaranja());
 		setBackground(colores.getNaranja());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 543, 503);
+		setBounds(100, 100, 543, 571);
 		setLocationRelativeTo(vista);
 		contentPane = new JPanel();
 		contentPane.setBackground(colores.getVerde());
@@ -184,6 +185,7 @@ public class VentanaFormularioLogin extends JFrame {
 		lblNewLabel_2_1.setBounds(10, 12, 134, 14);
 		lblNewLabel_2_1.setForeground(colores.getAmarillo());
 		panel_2_1.add(lblNewLabel_2_1);
+		
 
 		choice_ubi = new Choice();
 		choice_ubi.setBounds(150, 12, 200, 20);
@@ -193,7 +195,7 @@ public class VentanaFormularioLogin extends JFrame {
 		// Panel para los botones
 		JPanel panel_2_1_1 = new JPanel();
 		panel_2_1_1.setBackground(new Color(64, 191, 119));
-		panel_2_1_1.setBounds(38, 387, 409, 51);
+		panel_2_1_1.setBounds(38, 470, 409, 51);
 		contentPane.add(panel_2_1_1);
 
 		button_cancelar = new JButton("Cancelar");
@@ -206,14 +208,38 @@ public class VentanaFormularioLogin extends JFrame {
 		}else{
 			textCrear = "Crear perfil";
 		}
-
+		
 		button_crear = new JButton(textCrear);
 		button_crear.setBackground(colores.getNaranja());
 		panel_2_1_1.add(button_crear);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		panel_3.setBackground(new Color(64, 191, 119));
+		panel_3.setBounds(38, 386, 409, 51);
+		contentPane.add(panel_3);
+		
+		JLabel lblUrlImagen = new JLabel("URL Imagen:");
+		lblUrlImagen.setForeground(new Color(255, 222, 89));
+		lblUrlImagen.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblUrlImagen.setBounds(10, 8, 130, 14);
+		panel_3.add(lblUrlImagen);
+		
+		textField_url = new JTextField("");
+		textField_url.setColumns(10);
+		textField_url.setBounds(150, 6, 200, 20);
+		panel_3.add(textField_url);
+		
+		JLabel lblOpcional = new JLabel("(Opcional)");
+		lblOpcional.setFont(new Font("Dialog", Font.ITALIC, 12));
+		lblOpcional.setForeground(colores.getAmarillo());
+		lblOpcional.setBounds(20, 26, 59, 14);
+		panel_3.add(lblOpcional);
 
 		if(modificar) {
 			cargarChoiceLocalizacionMod(choice_ubi);
 			cargarListaDeportesMod(listDeportes);
+			textField_url.setText(persona.getUrl());
 		}else {
 			cargarChoiceLocalizacion(choice_ubi);
 			cargarListaDeportes(listDeportes);			
@@ -323,6 +349,7 @@ public class VentanaFormularioLogin extends JFrame {
 
 	public void crearPerfil() throws SQLException {
 		try{
+			String url = textField_url.getText();
 			String usr = textUsr.getText();
 			String email = textEmail.getText();
 			localizacion = choice_ubi.getSelectedItem();
@@ -331,7 +358,7 @@ public class VentanaFormularioLogin extends JFrame {
 			Persona persona = new Persona(comando);  
 			String [] deportes = listDeportes.getSelectedItems();
 			
-			persona.crearPerfil(usr, localizacion, email, password, deportes);
+			persona.crearPerfil(usr, localizacion, email, password, deportes, url);
 			
 			JOptionPane.showMessageDialog(this, "Perfil creado correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
 			
@@ -352,6 +379,7 @@ public class VentanaFormularioLogin extends JFrame {
 
 	//Metodo encargado de modificar el perfil de un usario 
 	public void modificarPerfil() throws Exception {
+		String url = textField_url.getText();
 		String usr = textUsr.getText();
 		String email = textEmail.getText();
 		localizacion = choice_ubi.getSelectedItem();
@@ -359,14 +387,14 @@ public class VentanaFormularioLogin extends JFrame {
 		String password = passwordField.getText();
 		String [] deportes = listDeportes.getSelectedItems();
 
-		persona.modificarPerfil(usr, localizacion, email, password, deportes); 
+		persona.modificarPerfil(usr, localizacion, email, password, deportes, url); 
 		
 		ventanaPerfilUsuario.setPersona(persona);
 		ventanaPerfilUsuario.eliminarItemsChoice();
 		ventanaPerfilUsuario.cargarDatos();
 		ventanaPerfilUsuario.limpiarTabla();
 		ventanaPerfilUsuario.generarContenidoTabla();
-		
+		ventanaPerfilUsuario.cargarImagenPerfil();
 		JOptionPane.showMessageDialog(this, "Datos modificados correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
 		this.cerrarVentana();
 	}
@@ -374,6 +402,4 @@ public class VentanaFormularioLogin extends JFrame {
 	public void cerrarVentana() {
 		this.dispose();
 	}
-
-
 }

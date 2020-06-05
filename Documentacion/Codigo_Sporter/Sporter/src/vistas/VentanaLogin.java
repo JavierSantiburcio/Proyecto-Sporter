@@ -84,6 +84,7 @@ public class VentanaLogin extends JFrame {
 		
 		// Campos Usuario 
 		JLabel lblNewLabel = new JLabel("Email:");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel.setBounds(0, 5, 61, 16);
 		panel_1.add(lblNewLabel);
 		lblNewLabel.setForeground(colores.getAmarillo());
@@ -95,6 +96,7 @@ public class VentanaLogin extends JFrame {
 		
 		// Campos Contrasenia
 		JLabel lblNewLabel_1 = new JLabel("Contrase"+'ñ'+"a:");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_1.setBounds(0, 43, 93, 16);
 		panel_1.add(lblNewLabel_1);
 		lblNewLabel_1.setForeground(colores.getAmarillo());

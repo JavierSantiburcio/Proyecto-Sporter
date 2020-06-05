@@ -6,18 +6,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 
 import vistas.VentanaAdministrador;
 import modelo.Administrador;
+import modelo.Persona;
 
 
 public class CtrlVentanaAdministrador implements ActionListener, MouseListener{
 
 	
 	private VentanaAdministrador vista;
-	
+	private Persona persona;
 	
 	
 	/**
@@ -26,6 +28,7 @@ public class CtrlVentanaAdministrador implements ActionListener, MouseListener{
 	public CtrlVentanaAdministrador(VentanaAdministrador v){
 		super();
 		vista = v;
+		this.persona = persona;
 	}
 	
 	
@@ -33,22 +36,36 @@ public class CtrlVentanaAdministrador implements ActionListener, MouseListener{
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
 		
-		switch (comando) {
+		switch(comando) {
+		case "SALIR":
+			System.out.println("Sesion Cerrada");
+			vista.cerrarVentana();
+			break;
+		case "ELIMINARUSUARIO":
+			
+			vista.borrarUsuario(persona);
+			break;
 		case "PERFIL":
 			try {
-				vista.perfilUsuario();
+				vista.verPerfil();
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			break;
-
+		case "ELIMINAREVENTO":
+			try{
+				vista.borrarEvento();
+			}catch(SQLException e1) {
+				e1.printStackTrace();
+			}
 		case "FILTRAR":
-			;
-			
-			//vista.VentanaAdministrador(admin);
-			break;
-		}
+			try{
+				vista.filtrarEvento();
+			}catch(SQLException e1) {
+				e1.printStackTrace();
+			}
+	}
 
 	}
 
@@ -71,7 +88,7 @@ public class CtrlVentanaAdministrador implements ActionListener, MouseListener{
 						e.printStackTrace();
 					}
 				} else if (boton.getName().equals("cs")) {
-					vista.iniciarSesion();
+					vista.cerrarVentana();
 				}
 			}
 		}

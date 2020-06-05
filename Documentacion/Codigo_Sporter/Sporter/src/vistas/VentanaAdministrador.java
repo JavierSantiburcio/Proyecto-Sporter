@@ -87,9 +87,9 @@ public class VentanaAdministrador extends JFrame  {
 
 	/**
 	 * Create the frame.
-	 * @throws SQLException 
+	 * @throws Exception 
 	 */
-	public VentanaAdministrador(Administrador admin) throws SQLException{
+	public VentanaAdministrador(Administrador admin) throws Exception{
 		setResizable(false);
 		setFont(new Font("Dialog", Font.BOLD, 12));
 		setTitle("Sporter");
@@ -140,11 +140,11 @@ public class VentanaAdministrador extends JFrame  {
 		
 		
 		btCerrarSesion = new JButton("Cerrar sesion");
-		btCerrarSesion.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});		
+		//btCerrarSesion.addActionListener(new ActionListener() {
+		//	public void actionPerformed(ActionEvent e) {
+		//		System.exit(0);
+		//	}
+		//});		
 		btCerrarSesion.setBounds(819, 5, 117, 29);
 		btCerrarSesion.setName("cs");
 		contentPane.add(btCerrarSesion);
@@ -157,11 +157,11 @@ public class VentanaAdministrador extends JFrame  {
 		btnPerfil.setForeground(colores.getNaranja());
 		btnPerfil.setBounds(562, 5, 61, 39);
 		contentPane.add(btnPerfil);
-		btnPerfil.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		//btnPerfil.addActionListener(new ActionListener() {
+		//	public void actionPerformed(ActionEvent e) {
 				//System.exit(0);
-			}
-		});	
+		//	}
+		//});	
 		// tabla derecha Eliminar Eventos 
 		
 		@SuppressWarnings("serial")
@@ -234,7 +234,7 @@ public class VentanaAdministrador extends JFrame  {
 	    contentPane.add(scrollPaneEventos);			
 		scrollPaneEventos.setColumnHeaderView(btnEliminar);	
 		
-		generarContenidoTabla1();
+		//generarContenidoTabla1();
 		
 		//String[] titulos = new String[] {
 		//		"Propietario", "Deporte", "Ubicacion", "Participantes", "fecha", "hora"," "
@@ -343,37 +343,7 @@ public class VentanaAdministrador extends JFrame  {
 			        
 			    }//GEN-LAST:event_tablaMouseClicked
 	        });
-	    
-		
-		tabla.addMouseListener(new java.awt.event.MouseAdapter() {
-	        
-
-	        private void tablaMouseClicked(java.awt.event.MouseEvent evt) throws SQLException {//GEN-FIRST:event_tablaMouseClicked
-		        
-		        int column = tabla.getColumnModel().getColumnIndexAtX(evt.getX());
-		        int row = evt.getY()/tabla1.getRowHeight();
-		        
-		        if(row < tabla.getRowCount() && row >= 0 && column < tabla1.getColumnCount() && column >= 0){
-		            Object value = tabla1.getValueAt(row, column);
-		            if(value instanceof JButton){
-		                ((JButton)value).doClick();
-		                JButton boton = (JButton) value;
-
-		             
-		                if(boton.getName().equals("e")){
-		                    JOptionPane.showConfirmDialog(null, "Desea eliminar este registro", "Confirmar", JOptionPane.OK_CANCEL_OPTION);
-		                    System.out.println("Click en el boton eliminar");
-		                    Object id;
-							//EVENTOS ELIMINAR
-		                    //borrarevento(evento);
-		                
-		                }
-		            }
-		        
-		        }
-		        
-		    }//GEN-LAST:event_tablaMouseClicked
-	    });
+	   
 		
 		
 		
@@ -409,7 +379,7 @@ public class VentanaAdministrador extends JFrame  {
 	
 	}
 	
-	public void generarContenidoTabla1() throws SQLException {
+	public void generarContenidoTabla1() throws Exception {
 		List<Evento> listEventosA = new ArrayList<Evento>();
 		Evento evento = new Evento(command);
 		listEventosA = evento.getListEventos(persona.getId()); // Almaceno una lista con todos los objetos de eventos de la base da datos
@@ -444,7 +414,7 @@ public class VentanaAdministrador extends JFrame  {
 
      String titulos[] ={"ID","FECHA","HORA","PROPIETARIO","DEPORTE","UBICACIÒN","Nº PARTICIPANTES"," "};	
 
-	public void generarContenidoTabla2() throws SQLException {
+	public void generarContenidoTabla2() throws Exception {
 		Conexion conexion = new Conexion();
 		command = conexion.getcommand();
 		
@@ -456,7 +426,7 @@ public class VentanaAdministrador extends JFrame  {
 		listPersonas =  getListPersonas();// Almaceno una lista con todas los personas de la base da datos
 		
 		for (int i = 0; i < listPersonas.size(); i++) {//  anadiendo filas 
-			Object[] rowData = new Object[3];
+			Object[] rowData = new Object[4];
 			
 			Integer id = listPersonas.get(i).getId();
 			String nombre= listPersonas.get(i).getNombre();
@@ -466,43 +436,14 @@ public class VentanaAdministrador extends JFrame  {
 			rowData[2] =  email;
 			rowData[3] = btn2Eliminar;
 			
-			modeloTabla.addRow(rowData); 
+			modeloTabla2.addRow(rowData); 
 		}
 
 	}
-		
-	public List<Persona> getListPersonas() throws SQLException {
-			List<Persona> listPersonas = new ArrayList<Persona>();
-			ResultSet data;
-			Persona persona = new Persona(command); 
-			data = command.executeQuery("SELECT idUsuarios from usuarios where admin=0;");
-			while(data.next()) {
-				Integer id= data.getInt(1);
-				persona = new Persona(command,id);
-				listPersonas.add(persona);
-				
-			}
-			return listPersonas;
-		}
-
-
-	
-
-
-
 
 
 	//----------------------------------------------
    
-	private String getString(int i) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-
-
 	public void controladorVista(ActionListener crtl) {
 		
 		btCerrarSesion.addActionListener(crtl);
@@ -534,7 +475,20 @@ public class VentanaAdministrador extends JFrame  {
    //-----------------------------------------------------------------
 	
 	
-
+	// Jose Luis Obtenr lista de personas para el administrador
+		public List<Persona> getListPersonas() throws SQLException {
+			
+			
+			ResultSet data;
+			List<Persona> listPersonas = new ArrayList<Persona>();
+			data = command.executeQuery("SELECT * from usuarios where admin=0;");
+			while(data.next()) {
+				Persona persona = new Persona(command, data.getInt(1));
+				listPersonas.add(persona);
+				
+			}
+			return listPersonas;
+		}
 
 	
     public void borrarEvento() throws SQLException {
@@ -582,23 +536,24 @@ public class VentanaAdministrador extends JFrame  {
 	
 			}
 	
-			public void filtrarEvento() {
+			public void filtrarEvento() throws SQLException{
 				// TODO Auto-generated method stub
 				
 			}
 
-			public void perfilUsuario() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public void iniciarSesion() {
-				// TODO Auto-generated method stub
-				
-			}	
+			
 			
 			public void cerrarVentana() {
 				this.dispose();
+			}
+
+
+
+
+
+			public void verPerfil() {
+				// TODO Auto-generated method stub
+				
 			}
 
 			

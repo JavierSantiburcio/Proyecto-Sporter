@@ -37,6 +37,14 @@ public class Usuario {
 		this.command = command;
 	}
 	
+	public Usuario(Statement command2, String nombre2, String email2, String pass, Boolean admin2) {
+		this.command = command2;
+		nombre = nombre2;
+		email = email2;
+		password = pass;
+		admin = admin2;
+	}
+
 	public String getNombre() {
 		return nombre;
 	}

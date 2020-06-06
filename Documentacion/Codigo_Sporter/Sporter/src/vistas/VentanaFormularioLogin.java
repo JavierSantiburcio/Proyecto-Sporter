@@ -65,8 +65,6 @@ public class VentanaFormularioLogin extends JFrame {
 
 
 	public VentanaFormularioLogin(VentanaPerfilUsuario vista, Persona persona, boolean modificar) throws SQLException{
-		//this.persona = new Persona(comando, "jiji"); -----------PARA PRUEBAS
-		//this.modificar = true;
 
 		this.persona = persona; 
 		this.modificar = modificar;
@@ -348,32 +346,28 @@ public class VentanaFormularioLogin extends JFrame {
 	// Metodo encargado de crear el perfil de usuario en la base de datos
 
 	public void crearPerfil() throws SQLException {
-		try{
+		
 			String url = textField_url.getText();
 			String usr = textUsr.getText();
 			String email = textEmail.getText();
-			localizacion = choice_ubi.getSelectedItem();
+			String localizacion = choice_ubi.getSelectedItem();
 			@SuppressWarnings("deprecation")
 			String password = passwordField.getText();
 			Persona persona = new Persona(comando);  
 			String [] deportes = listDeportes.getSelectedItems();
 			
-			persona.crearPerfil(usr, localizacion, email, password, deportes, url);
 			
-			JOptionPane.showMessageDialog(this, "Perfil creado correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
-			
-			this.cerrarVentana();
-			
-		}catch(SQLException e) {
-			
-			JOptionPane.showMessageDialog(this, "Falta por rellenar algún campo","Atenci"+'ó'+"n", JOptionPane.WARNING_MESSAGE, null);
-			
-		}catch (RuntimeException e){
-			
-			JOptionPane.showMessageDialog(this, "Email ya registrado en la base de datos","Atenci"+'ó'+"n", JOptionPane.WARNING_MESSAGE, null);
-			
-			
-		}
+			if(email.isEmpty() || usr.isEmpty() || (deportes.length == 0)) {
+				JOptionPane.showMessageDialog(this, "Capo de texto vac"+'í'+"o.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
+			}else {
+				try {
+					persona.crearPerfil(usr, localizacion, email, password, deportes, url);
+					JOptionPane.showMessageDialog(this, "Perfil creado correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
+					this.cerrarVentana();
+				}catch (SQLException e) {
+					JOptionPane.showMessageDialog(this, "Perfil ya existente.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
+				}
+			}
 	}
 
 

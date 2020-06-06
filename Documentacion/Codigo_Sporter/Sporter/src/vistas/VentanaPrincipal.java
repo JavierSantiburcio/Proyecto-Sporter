@@ -102,31 +102,29 @@ public class VentanaPrincipal extends JFrame {
 		//Nombre Usuario
 		
 		btn_Usuario = new JButton();
-		btn_Usuario.setVerticalAlignment(SwingConstants.BOTTOM);
 		btn_Usuario.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
-		btn_Usuario.setHorizontalAlignment(SwingConstants.LEFT);
-		btn_Usuario.setBounds(79, 35, 188, 24);
-		btn_Usuario.setBackground(new Color(46, 139, 87));
+		btn_Usuario.setHorizontalAlignment(SwingConstants.LEADING);
+		btn_Usuario.setBounds(79, 35, 165, 24);
+		btn_Usuario.setBackground(colores.getNaranja());
 		panel.add(btn_Usuario);
 		
 		
 		
 		lbl_IconoPerfil = new JLabel("");
 		lbl_IconoPerfil.setBounds(10, 8, 59, 51);
-		int w = lbl_IconoPerfil.getWidth();
-		int h = lbl_IconoPerfil.getHeight();
-		lbl_IconoPerfil.setIcon( new ImageIcon(imagenes.getIconoPerfilEscalado(w, h)));
 		panel.add(lbl_IconoPerfil);
 		
+		cargarImagenPerfil();
+		
 		btnCerrarSesion = new JButton("Cerrar Sesi"+'ó'+"n");
-		btnCerrarSesion.setBounds(287, 35, 120, 23);
+		btnCerrarSesion.setBounds(683, 36, 120, 24);
 		panel.add(btnCerrarSesion);
 		btnCerrarSesion.setBackground(colores.getNaranja());
 		
 		//Botones
 		
 		btnCrearEvento = new JButton("Crear Evento");
-		btnCrearEvento.setBounds(686, 35, 117, 23);
+		btnCrearEvento.setBounds(294, 35, 117, 24);
 		panel.add(btnCrearEvento);
 		btnCrearEvento.setBackground(colores.getNaranja());
 		
@@ -201,10 +199,14 @@ public class VentanaPrincipal extends JFrame {
 	}
 	
 	public void cargarImagenPerfil() {
-		imagenes = new Imagenes(persona.getUrl());
 		int w = lbl_IconoPerfil.getWidth();
 		int h = lbl_IconoPerfil.getHeight();
-		lbl_IconoPerfil.setIcon( new ImageIcon(imagenes.getIconoPerfilEscalado(w, h)));
+		imagenes = new Imagenes(persona.getUrl());
+		if(persona.getUrl() == null || persona.getUrl().equals("")) {
+			lbl_IconoPerfil.setIcon( new ImageIcon(imagenes.getIconoUsuarioEscalado(w, h)));
+		}else {
+			lbl_IconoPerfil.setIcon( new ImageIcon(imagenes.getIconoPerfilEscalado(w, h)));
+		}
 	}
 	
 	

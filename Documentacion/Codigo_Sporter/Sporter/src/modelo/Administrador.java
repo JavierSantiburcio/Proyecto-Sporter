@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Administrador extends Usuario{
-	
+
 	private String email;
 
 	public Administrador(Statement command, int id) throws SQLException {
@@ -14,23 +14,30 @@ public class Administrador extends Usuario{
 			throw new RuntimeException("No eres admin");
 		}
 	}
-	
+
 	public Administrador(Statement command, String email) throws SQLException {
-        super(command, email);
-        this.email = email;
-        if(!getAdmin()) {
-            throw new RuntimeException("No eres admin");
-        }
-    }
-	public void eliminarUsuario(Persona persona) {
-		try {
-			command.execute("DELETE FROM `spoter`.`usuarios` WHERE (`idUsuarios` = '" + persona.getId() + "')");
-		} catch (SQLException e) {
-			throw new RuntimeException("No existe ese id de usuario");
+		super(command, email);
+		this.email = email;
+		if(!getAdmin()) {
+			throw new RuntimeException("No eres admin");
 		}
 	}
+	public void eliminarUsuario(int idPersona) throws SQLException {
+
+		System.out.println(idPersona);
+		//ResultSet data = command.executeQuery("SELECT id_Evento FROM spoter.evento  WHERE Creador = "+idPersona+";");
+		//data.next();
+		//int idEvento = data.getInt(1);
+		
+		//Primero hacemos DELETE en las tablas intermedias
+		//command.execute("DELETE FROM spoter.usuarios_has_evento WHERE usuarios_idUsuarios = " + idPersona + ";"); // elimino los eventos con los que esta relacionado
+		//command.execute("DELETE FROM spoter.usuarios_has_evento WHERE evento_id_Evento = " + idEvento + ";"); // Los demas usuarios dejan de participar en los eventos del usuario eliminado
+		command.execute("DELETE FROM spoter.usuarios WHERE (idUsuarios = " + idPersona + ")"); //  Elimino al usuario
+		//command.execute("DELETE FROM spoter.evento WHERE Creador = " + idPersona + ";"); // Elimino sus eventos
+	}
 	public void eliminarEvento (Evento evento) throws SQLException{
-		command.execute("DELETE FROM `spoter`.`evento` WHERE (`id_Evento` = '"+evento.getId()+"');");
+		command.execute("DELETE FROM spoter.evento WHERE id_Evento = " + evento.getId() + ";");
+		command.execute("DELETE FROM spoter.usuarios_has_evento WHERE evento_id_Evento = " + evento.getId() + ";");
 	}
 
 	public boolean confirmarContrasenia(String text) throws SQLException {
@@ -43,6 +50,6 @@ public class Administrador extends Usuario{
 		}
 		return correcta;
 	}
-	
-	
+
+
 }

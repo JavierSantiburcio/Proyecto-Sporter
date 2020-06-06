@@ -126,7 +126,7 @@ public class Pruebas {
 		res.next();
 		int num = res.getInt(1);
 		
-		admin.eliminarUsuario(persona);
+		admin.eliminarUsuario(persona.getId());
 		
 		res = command.executeQuery("select count(*) from spoter.usuarios;");
 		res.next();
@@ -232,7 +232,7 @@ public class Pruebas {
 		Persona persona = new Persona(command,Creador);
 		
 		//Borrar evento
-		evento.borrarevento(persona,evento.getId()); // Daniel : he modificado un poco ese metodo, ahora tiene tambien el idEvento
+		evento.borrarevento(evento.getId()); // Daniel : he modificado un poco ese metodo, ahora tiene tambien el idEvento
 		
 		res = command.executeQuery("SELECT Count(*) FROM spoter.evento;");
 		res.next();

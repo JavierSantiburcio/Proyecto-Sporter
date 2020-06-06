@@ -31,7 +31,6 @@ public class Imagenes {
 		iconoPerfil = new ImageIcon(url).getImage();
 	}
 	
-	 
 	public Image getLogo() {
 		// Devuelte la imagen del logo 
 		

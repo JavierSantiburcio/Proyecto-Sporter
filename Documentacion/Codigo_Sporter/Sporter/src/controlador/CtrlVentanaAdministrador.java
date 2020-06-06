@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import javax.swing.JButton;
 
@@ -17,79 +18,72 @@ import modelo.Persona;
 
 public class CtrlVentanaAdministrador implements ActionListener, MouseListener{
 
-	
 	private VentanaAdministrador vista;
-	private Persona persona;
-	
-	
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+
 	public CtrlVentanaAdministrador(VentanaAdministrador v){
 		super();
 		vista = v;
-		this.persona = persona;
 	}
-	
-	
+
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String comando = e.getActionCommand();
-		
+
 		switch(comando) {
 		case "SALIR":
-			System.out.println("Sesion Cerrada");
-			vista.cerrarVentana();
-			break;
-		case "ELIMINARUSUARIO":
-			
-			vista.borrarUsuario(persona);
-			break;
-		case "PERFIL":
 			try {
-				vista.verPerfil();
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				vista.cerrarVentana();
+			} catch (ParseException e2) {
+				e2.printStackTrace();
 			}
 			break;
-		case "ELIMINAREVENTO":
-			try{
-				vista.borrarEvento();
-			}catch(SQLException e1) {
-				e1.printStackTrace();
-			}
+
 		case "FILTRAR":
 			try{
+				vista.limpiarTabla();
 				vista.filtrarEvento();
 			}catch(SQLException e1) {
 				e1.printStackTrace();
 			}
-	}
+		}
 
 	}
 
 
 	@Override
 	public void mouseClicked(MouseEvent evt) {
-		int column = vista.tabla.getColumnModel().getColumnIndexAtX(evt.getX()); // posicion x de la columna cuando hacemos click
-		int row = evt.getY() / vista.tabla.getRowHeight(); // fila
+		int columnEvento = vista.tablaEvento.getColumnModel().getColumnIndexAtX(evt.getX()); // posicion x de la columna cuando hacemos click
+		int rowEvento = evt.getY() / vista.tablaEvento.getRowHeight(); // fila
 		
-		if(row < vista.tabla.getRowCount() && row >= 0 && column < vista.tabla.getColumnCount() && column >= 0) { // dentro del rango de la tabla
-			Object value = vista.tabla.getValueAt(row, column);
+		int columnUsuario = vista.tablaUsuario.getColumnModel().getColumnIndexAtX(evt.getX()); // posicion x de la columna cuando hacemos click
+		int rowUsuario = evt.getY() / vista.tablaUsuario.getRowHeight(); // fila
+		
+		if(rowEvento < vista.tablaEvento.getRowCount() && rowEvento >= 0 && columnEvento < vista.tablaEvento.getColumnCount() && columnEvento >= 0) { // dentro del rango de la tabla
+			Object value = vista.tablaEvento.getValueAt(rowEvento, columnEvento);
 			if(value instanceof JButton) {
 				((JButton) value).doClick();
 				JButton boton = (JButton) value;
-
-				if (boton.getName().equals("f")) {
+				if (boton.getName().equals("e")) {
 					try {
-						vista.filtrarEvento();
+						vista.borrarEvento();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else if (boton.getName().equals("cs")) {
-					vista.cerrarVentana();
-				}
+				} 
+			}
+		}else if(rowUsuario < vista.tablaUsuario.getRowCount() && rowUsuario >= 0 && columnUsuario < vista.tablaUsuario.getColumnCount() && columnUsuario >= 0) {
+			Object value = vista.tablaUsuario.getValueAt(rowUsuario, columnUsuario);
+			if(value instanceof JButton) {
+				((JButton) value).doClick();
+				JButton boton = (JButton) value;
+				if (boton.getName().equals("u")) {
+					try {
+						vista.borrarUsuario();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} 
 			}
 		}
 	}

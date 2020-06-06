@@ -37,7 +37,7 @@ public class Evento {
 
 		organiza = data.getInt(5);
 	}
-	
+
 	// Daniel
 	public Evento(Statement command, int idEvento, String ubicacion, int num, String fecha, int creador, int deporte)throws SQLException {
 		this.command = command;
@@ -57,7 +57,7 @@ public class Evento {
 	public String getUbicacion() {
 		return ubicacion;
 	}
-	
+
 	public int getOrganiza() {
 		return organiza;
 	}
@@ -109,7 +109,7 @@ public class Evento {
 		}else if(fecha == null){
 			System.out.println("nulo fecha");
 		}
-		
+
 		ResultSet numFilas = command.executeQuery("SELECT id_Evento FROM spoter.evento");
 		int cont = 1;
 		while (numFilas.next()) {
@@ -118,9 +118,9 @@ public class Evento {
 		command.execute("ALTER TABLE spoter.evento AUTO_INCREMENT=" + cont + ";");
 
 		command.execute("INSERT INTO `spoter`.`evento` (`ubicacion`, `numParticipantesAct`, `fecha`, `Creador`, `Deporte`)"
-						+ " VALUES ('" + ubicacion + "', '" + numeroParcipantes + "', '" + fecha + "', '"
-						+ persona.getId() + "', '" + deporte + "');");
-		
+				+ " VALUES ('" + ubicacion + "', '" + numeroParcipantes + "', '" + fecha + "', '"
+				+ persona.getId() + "', '" + deporte + "');");
+
 		this.ubicacion = ubicacion;
 		this.numeroParticipantes = numeroParcipantes;
 		this.deporte = deporte;
@@ -134,9 +134,9 @@ public class Evento {
 
 		//Daniel: Cuando se crea un evento, tambien hay que a�adirlo a la tabla intermedia usuario_has_evento.
 		command.execute("INSERT INTO `spoter`.`usuarios_has_evento` (`usuarios_idUsuarios`, `evento_id_Evento`) VALUES ('"
-						+ persona.getId() + "', '" + id + "');");
+				+ persona.getId() + "', '" + id + "');");
 	}
-	
+
 	//Poner deporte -1 si no se quiere modificar
 	public void modificar_evento(int usuario, String ubicacion, String fecha, int deporte) throws SQLException {
 		if (organiza == usuario) {
@@ -149,7 +149,7 @@ public class Evento {
 		}
 	}
 
-	public void borrarevento(Persona persona,int idEvento) throws SQLException {
+	public void borrarevento(int idEvento) throws SQLException {
 		//No compruebo si la persona es el creador porque ya lo controlo al generar el boton cancelar en la tabla
 		// para los eventos donde el usuario es el creador. Sentencia 262 en la clase VentanaPerfilUsuario
 		command.execute("DELETE FROM spoter.evento WHERE id_Evento = " + idEvento + ";");
@@ -164,7 +164,37 @@ public class Evento {
 
 	public void dejarEvento(Persona persona, int idEvento) throws SQLException {
 		command.execute("DELETE FROM `spoter`.`usuarios_has_evento` WHERE (`usuarios_idUsuarios` = '" + persona.getId()
-				+ "') and (`evento_id_Evento` = '" + idEvento + "');");
+		+ "') and (`evento_id_Evento` = '" + idEvento + "');");
+	}
+
+	// Daniel: Metodo que devuelve una lista con todos los eventos del sistema
+	public List<Evento> getListAllEventos() throws SQLException {
+
+		List<Evento> listEventos = new ArrayList<Evento>();
+		ResultSet data = command.executeQuery("SELECT * FROM spoter.evento;");
+
+		while (data.next()) {
+			Evento evento = new Evento(command, data.getInt(1), data.getString(2), data.getInt(3), data.getString(4),
+					data.getInt(5), data.getInt(6));
+			listEventos.add(evento);
+		}
+
+		return listEventos;
+	}
+
+	// Daniel: Metodo que devuelve una lista de los eventos dependiendo del filtro
+	public List<Evento> getListAllEventosFiltro(String ubicacion, int IdDeporte) throws SQLException {
+
+		List<Evento> listEventos = new ArrayList<Evento>();
+		ResultSet data = command.executeQuery("SELECT * FROM spoter.evento E WHERE E.ubicacion = '"+ubicacion +"' AND E.Deporte = "+IdDeporte+";");
+
+		while (data.next()) {
+			Evento evento = new Evento(command, data.getInt(1), data.getString(2), data.getInt(3), data.getString(4),
+					data.getInt(5), data.getInt(6));
+			listEventos.add(evento);
+		}
+
+		return listEventos;
 	}
 
 	// Daniel: Metodo que devuelve una lista de los eventos de un usuario, donde es el propietario o participa en el.
@@ -185,6 +215,7 @@ public class Evento {
 
 		return listEventos;
 	}
+
 	// Rayan: Metodo que devuelve una lista de los eventos en base a la ubicacion y el deporte elegido y no incluye al usuario
 	public List<Evento> getListEventos(String Ubicacion, int idUsuario, int iddeporte) throws SQLException {
 
@@ -240,17 +271,17 @@ public class Evento {
 		num = data.getInt(1);
 		return num;
 	}
-	
+
 	//Daniel: obtener el id del evento dado sus valores
-		public int getIdEventoPropio(String fechaHora, int idCreador, int idDeporte, String nombreUbicacion) throws SQLException {
-			int idEvento;
-			ResultSet data = command.executeQuery("SELECT id_Evento FROM spoter.evento E WHERE E.Creador = " + idCreador + 
-					" AND E.ubicacion = '" + nombreUbicacion + "' AND E.fecha = '" + fechaHora + "' AND E.Deporte = " + idDeporte + ";");
-			data.next();
-			idEvento = data.getInt(1);
-			return idEvento;
-		}
-	
+	public int getIdEventoPropio(String fechaHora, int idCreador, int idDeporte, String nombreUbicacion) throws SQLException {
+		int idEvento;
+		ResultSet data = command.executeQuery("SELECT id_Evento FROM spoter.evento E WHERE E.Creador = " + idCreador + 
+				" AND E.ubicacion = '" + nombreUbicacion + "' AND E.fecha = '" + fechaHora + "' AND E.Deporte = " + idDeporte + ";");
+		data.next();
+		idEvento = data.getInt(1);
+		return idEvento;
+	}
+
 
 	//Daniel: obtener el id del evento dado sus valores
 	public int getIdeventoUnido(String fechaHora, String nombreCreador, int idDeporte, String nombreUbicacion) throws SQLException {
@@ -265,7 +296,7 @@ public class Evento {
 		idEvento = data.getInt(1);
 		return idEvento;
 	}
-	
+
 	//Daniel: metodo para obtener las fechas de los eventos creados o unidos
 	public List<String> getFechaTodosEventos(int idUsuario) throws SQLException{
 		List<String> listFechaEventos = new ArrayList<String>();
@@ -279,7 +310,7 @@ public class Evento {
 		}
 		return listFechaEventos;
 	}
-	
+
 	//Daniel: metodo para obtener las fechas de los eventos creados
 	public List<String> getFechaEventosCreados(int idUsuario) throws SQLException{
 		List<String> listFechaEventos = new ArrayList<String>();
@@ -289,17 +320,17 @@ public class Evento {
 		}
 		return listFechaEventos;
 	}
-	
+
 	//Daniel: metodo para obtener las fechas de los eventos unidos
-		public List<String> getFechaEventosUnidos(int idUsuario) throws SQLException{
-			List<String> listFechaEventos = new ArrayList<String>();
-			ResultSet data = command.executeQuery("SELECT fecha FROM spoter.evento E INNER JOIN spoter.usuarios_has_evento UE ON UE.evento_id_Evento"
-					+ " IN " + "(SELECT id_Evento FROM spoter.evento EV WHERE EV.Creador !=" + idUsuario + ")" + " WHERE "
-					+ "E.id_Evento = UE.evento_id_Evento" + " AND " + "UE.usuarios_idUsuarios =" + idUsuario + ";");
-			while (data.next()) {
-				listFechaEventos.add(data.getString(1));
-			}
-			return listFechaEventos;
+	public List<String> getFechaEventosUnidos(int idUsuario) throws SQLException{
+		List<String> listFechaEventos = new ArrayList<String>();
+		ResultSet data = command.executeQuery("SELECT fecha FROM spoter.evento E INNER JOIN spoter.usuarios_has_evento UE ON UE.evento_id_Evento"
+				+ " IN " + "(SELECT id_Evento FROM spoter.evento EV WHERE EV.Creador !=" + idUsuario + ")" + " WHERE "
+				+ "E.id_Evento = UE.evento_id_Evento" + " AND " + "UE.usuarios_idUsuarios =" + idUsuario + ";");
+		while (data.next()) {
+			listFechaEventos.add(data.getString(1));
 		}
+		return listFechaEventos;
+	}
 
 }

@@ -34,6 +34,7 @@ public class VentanaPrincipal extends JFrame {
 	private Persona persona;
 	private JPanel panel;
 	private JPanel panel_1;
+	private JLabel lbl_Sporter;
 
 	public VentanaPrincipal(Persona persona) throws SQLException{
 		
@@ -117,16 +118,23 @@ public class VentanaPrincipal extends JFrame {
 		cargarImagenPerfil();
 		
 		btnCerrarSesion = new JButton("Cerrar Sesi"+'ó'+"n");
-		btnCerrarSesion.setBounds(683, 36, 120, 24);
+		btnCerrarSesion.setBounds(80, 8, 120, 24);
 		panel.add(btnCerrarSesion);
 		btnCerrarSesion.setBackground(colores.getNaranja());
 		
 		//Botones
 		
 		btnCrearEvento = new JButton("Crear Evento");
-		btnCrearEvento.setBounds(294, 35, 117, 24);
+		btnCrearEvento.setBounds(696, 6, 117, 24);
 		panel.add(btnCrearEvento);
 		btnCrearEvento.setBackground(colores.getNaranja());
+		
+		lbl_Sporter = new JLabel("");
+		lbl_Sporter.setBounds(314, -86, 186, 151);
+		int w = lbl_Sporter.getWidth();
+		int h = lbl_Sporter.getHeight();
+		lbl_Sporter.setIcon(new ImageIcon(imagenes.getLogo_solo_nombreEscalado(w, h)));
+		panel.add(lbl_Sporter);
 		
 		//Tabla Eventos
 		

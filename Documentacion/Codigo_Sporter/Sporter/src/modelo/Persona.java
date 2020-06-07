@@ -132,8 +132,6 @@ public class Persona extends Usuario{
 		for(String nombre1 : deportes) {
 			this.meterDeporte(deporte.obtenerIdDeporte(nombre1));
 		}
-		
-		System.out.println("/nPERFIL CREADO");
 		 
 	}
 	
@@ -184,7 +182,6 @@ public class Persona extends Usuario{
 		boolean correcta = false;
 		ResultSet data = command.executeQuery("Select password from spoter.usuarios user where user.idUsuarios ="+ id +";");
 		data.next();
-		System.out.println(data.getString(1).toString());
 		if(contrasenia.compareTo(data.getString(1).toString()) == 0) {
 			correcta = true;
 		}

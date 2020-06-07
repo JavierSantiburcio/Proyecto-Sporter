@@ -357,8 +357,8 @@ public class VentanaFormularioLogin extends JFrame {
 			String [] deportes = listDeportes.getSelectedItems();
 			
 			
-			if(email.isEmpty() || usr.isEmpty() || (deportes.length == 0)) {
-				JOptionPane.showMessageDialog(this, "Capo de texto vac"+'í'+"o.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
+			if(email.isEmpty() || usr.isEmpty() || (deportes.length == 0) || password.compareTo("") == 0) {
+				JOptionPane.showMessageDialog(this, "Datos insuficientes","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
 			}else {
 				try {
 					persona.crearPerfil(usr, localizacion, email, password, deportes, url);
@@ -380,17 +380,24 @@ public class VentanaFormularioLogin extends JFrame {
 		@SuppressWarnings("deprecation")
 		String password = passwordField.getText();
 		String [] deportes = listDeportes.getSelectedItems();
-
-		persona.modificarPerfil(usr, localizacion, email, password, deportes, url); 
 		
-		ventanaPerfilUsuario.setPersona(persona);
-		ventanaPerfilUsuario.eliminarItemsChoice();
-		ventanaPerfilUsuario.cargarDatos();
-		ventanaPerfilUsuario.limpiarTabla();
-		ventanaPerfilUsuario.generarContenidoTabla();
-		ventanaPerfilUsuario.cargarImagenPerfil();
-		JOptionPane.showMessageDialog(this, "Datos modificados correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
-		this.cerrarVentana();
+		if(email.isEmpty() || usr.isEmpty() || (deportes.length == 0) || password.compareTo("") == 0) {
+			JOptionPane.showMessageDialog(this, "Datos insuficientes.","ADVERTENCIA", JOptionPane.WARNING_MESSAGE, null);
+		}else {
+			try {
+				persona.modificarPerfil(usr, localizacion, email, password, deportes, url);
+				ventanaPerfilUsuario.setPersona(persona);
+				ventanaPerfilUsuario.eliminarItemsChoice();
+				ventanaPerfilUsuario.cargarDatos();
+				ventanaPerfilUsuario.limpiarTabla();
+				ventanaPerfilUsuario.generarContenidoTabla();
+				ventanaPerfilUsuario.cargarImagenPerfil();
+				JOptionPane.showMessageDialog(this, "Perfil actualizado correctamente.","Mensaje", JOptionPane.INFORMATION_MESSAGE, null);
+				this.cerrarVentana();
+			}catch (SQLException e) {
+				JOptionPane.showMessageDialog(this, "Error al actualizar el perfil, inténtelo de nuevo.", "Error", JOptionPane.ERROR_MESSAGE, null);
+			}
+		}
 	}
 
 	public void cerrarVentana() {

@@ -125,7 +125,7 @@ public class VentanaPrincipal extends JFrame {
 		//Botones
 		
 		btnCrearEvento = new JButton("Crear Evento");
-		btnCrearEvento.setBounds(696, 6, 117, 24);
+		btnCrearEvento.setBounds(686, 8, 117, 46);
 		panel.add(btnCrearEvento);
 		btnCrearEvento.setBackground(colores.getNaranja());
 		
@@ -303,6 +303,10 @@ public class VentanaPrincipal extends JFrame {
 				modelo.addRow(informacion);
 			}
 		}
+		if(tablaEventos.getRowCount() == 0) {
+			Object[] Vacio = {null, null, "No", "hay", "eventos", null, null};
+			modelo.addRow(Vacio);
+		}
 	}
 	public void llenarTablaBuscar() throws SQLException{
 		modelo.setRowCount(0);
@@ -327,6 +331,10 @@ public class VentanaPrincipal extends JFrame {
 			informacion[5] = hora;
 			informacion[6] = btnUnirse;
 			modelo.addRow(informacion);
+		}
+		if(tablaEventos.getRowCount() == 0) {
+			Object[] Vacio = {null, null, "No", "hay", "eventos", null, null};
+			modelo.addRow(Vacio);
 		}
 	}
 	public void Unirse() throws SQLException{

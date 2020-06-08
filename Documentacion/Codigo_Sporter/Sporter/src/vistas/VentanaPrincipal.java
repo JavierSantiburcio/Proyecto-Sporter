@@ -61,38 +61,44 @@ public class VentanaPrincipal extends JFrame {
 		
 		panel_1 = new JPanel();
 		panel_1.setBackground(new Color(46, 139, 87));
-		panel_1.setBounds(38, 104, 813, 49);
+		panel_1.setBounds(38, 88, 813, 65);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
 		btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(700, 11, 103, 23);
+		btnBuscar.setBounds(696, 36, 103, 23);
 		panel_1.add(btnBuscar);
 		btnBuscar.setBackground(colores.getNaranja());
 		
 		choice_Ubicacion = new Choice();
-		choice_Ubicacion.setBounds(504, 14, 166, 20);
+		choice_Ubicacion.setBounds(500, 39, 166, 20);
 		panel_1.add(choice_Ubicacion);
 		cargarChoiceUbicacion(choice_Ubicacion);
 		
 		//Opciones Busqueda
 	
 		JLabel lblIntroduzcaDeporte = new JLabel("Introduzca Deporte:");
-		lblIntroduzcaDeporte.setBounds(10, 14, 141, 20);
+		lblIntroduzcaDeporte.setBounds(6, 39, 141, 20);
 		panel_1.add(lblIntroduzcaDeporte);
 		lblIntroduzcaDeporte.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblIntroduzcaDeporte.setForeground(colores.getAmarillo());
 		
 		choice_Deporte = new Choice();
-		choice_Deporte.setBounds(157, 14, 166, 20);
+		choice_Deporte.setBounds(153, 39, 166, 20);
 		panel_1.add(choice_Deporte);
 		cargarChoiceDeporte(choice_Deporte);
 		
 		JLabel lblIntroduzcaUbicacin = new JLabel("Introduzca Ubicaci"+'ó'+"n:");
-		lblIntroduzcaUbicacin.setBounds(357, 14, 141, 20);
+		lblIntroduzcaUbicacin.setBounds(353, 39, 141, 20);
 		panel_1.add(lblIntroduzcaUbicacin);
 		lblIntroduzcaUbicacin.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblIntroduzcaUbicacin.setForeground(colores.getAmarillo());
+		
+		JLabel lblNewLabel = new JLabel("Filrar por deporte y ubicación concretos");
+		lblNewLabel.setFont(new Font("Lucida Grande", Font.ITALIC, 20));
+		lblNewLabel.setBounds(228, 0, 388, 27);
+		lblNewLabel.setForeground(colores.getAmarillo());
+		panel_1.add(lblNewLabel);
 		
 		panel = new JPanel();
 		panel.setBackground(new Color(46, 139, 87));

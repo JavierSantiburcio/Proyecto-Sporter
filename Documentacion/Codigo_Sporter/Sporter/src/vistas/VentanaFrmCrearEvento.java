@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import colores.Colores;
 import conexion.Conexion;
+import imagenes.Imagenes;
 import modelo.Deporte;
 import modelo.Evento;
 import modelo.Persona;
@@ -48,6 +49,7 @@ public class VentanaFrmCrearEvento extends JFrame {
 	private JTextField textField_dia;
 	private JTextField textField_hora;
 	private JTextField textField_minuto;
+	private Imagenes imagenes = new Imagenes();
 	
 //------------------------------------------------------------ INICIO ESTRUCTURA VENTANA ---------------------------------------------------------//
 	
@@ -59,6 +61,7 @@ public class VentanaFrmCrearEvento extends JFrame {
 		this.persona = persona;
 		setFont(new Font("Dialog", Font.BOLD, 12));
 		setTitle("Sporter - Crear Evento Deportivo");
+		setIconImage(imagenes.getLogo_sin_nombreEscalado(16, 16));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 423, 445);
 		setLocationRelativeTo(null);
@@ -125,12 +128,12 @@ public class VentanaFrmCrearEvento extends JFrame {
 		
 		
 		button_CrearEvento = new JButton("Crear");
-		button_CrearEvento.setBounds(84, 333, 90, 22);
+		button_CrearEvento.setBounds(236, 333, 90, 22);
 		button_CrearEvento.setBackground(colores.getNaranja());
 		contentPane.add(button_CrearEvento);
 		
 		button_Cancelar = new JButton("Cancelar");
-		button_Cancelar.setBounds(236, 333, 90, 22);
+		button_Cancelar.setBounds(84, 333, 90, 22);
 		button_Cancelar.setBackground(colores.getNaranja());
 		contentPane.add(button_Cancelar);
 		

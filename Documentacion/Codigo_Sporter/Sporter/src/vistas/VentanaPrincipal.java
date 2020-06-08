@@ -51,7 +51,7 @@ public class VentanaPrincipal extends JFrame {
 		setForeground(colores.getNaranja());
 		setBackground(colores.getNaranja());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 892, 692);
+		setBounds(100, 100, 892, 707);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBackground(colores.getVerde());
@@ -61,7 +61,7 @@ public class VentanaPrincipal extends JFrame {
 		
 		panel_1 = new JPanel();
 		panel_1.setBackground(new Color(46, 139, 87));
-		panel_1.setBounds(38, 88, 813, 65);
+		panel_1.setBounds(38, 103, 813, 65);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -94,9 +94,9 @@ public class VentanaPrincipal extends JFrame {
 		lblIntroduzcaUbicacin.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblIntroduzcaUbicacin.setForeground(colores.getAmarillo());
 		
-		JLabel lblNewLabel = new JLabel("Filrar por deporte y ubicación concretos");
+		JLabel lblNewLabel = new JLabel("Filtrar por deporte y ubicación concretos");
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.ITALIC, 20));
-		lblNewLabel.setBounds(228, 0, 388, 27);
+		lblNewLabel.setBounds(215, 0, 398, 27);
 		lblNewLabel.setForeground(colores.getAmarillo());
 		panel_1.add(lblNewLabel);
 		
@@ -145,7 +145,7 @@ public class VentanaPrincipal extends JFrame {
 		//Tabla Eventos
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(38, 164, 813, 465);
+		scrollPane.setBounds(38, 201, 813, 465);
 		scrollPane.setToolTipText("");
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);

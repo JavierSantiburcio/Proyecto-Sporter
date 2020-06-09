@@ -64,7 +64,7 @@ CREATE TABLE `evento` (
   KEY `fk_evento_deporte1_idx` (`Deporte`),
   CONSTRAINT `creador` FOREIGN KEY (`Creador`) REFERENCES `usuarios` (`idUsuarios`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_evento_deporte1` FOREIGN KEY (`Deporte`) REFERENCES `deporte` (`idDeporte`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,6 +73,7 @@ CREATE TABLE `evento` (
 
 LOCK TABLES `evento` WRITE;
 /*!40000 ALTER TABLE `evento` DISABLE KEYS */;
+INSERT INTO `evento` VALUES (3,'Málaga',4,'2020-06-12 12:00:00',3,7),(5,'Málaga',10,'2020-06-25 18:00:00',2,18),(6,'Málaga',14,'2020-06-10 10:00:00',2,19),(7,'Málaga',10,'2020-06-13 17:00:00',1,1),(8,'Málaga',4,'2020-06-11 15:30:00',1,7),(9,'Málaga',2,'2020-06-22 18:00:00',1,20),(10,'Málaga',14,'2020-06-15 11:00:00',3,19),(11,'Málaga',4,'2020-06-28 19:00:00',3,7),(12,'Málaga',10,'2020-07-01 10:00:00',1,18),(13,'Málaga',14,'2020-07-02 22:53:00',1,19),(14,'Málaga',14,'2020-07-15 18:30:00',1,19),(15,'Málaga',10,'2020-07-20 17:00:00',3,1),(16,'Málaga',10,'2020-07-10 20:00:00',3,1),(17,'Málaga',14,'2020-07-05 12:00:00',3,19),(18,'Málaga',10,'2020-06-20 12:00:00',2,1),(19,'Málaga',4,'2020-06-12 23:00:00',2,7),(20,'Málaga',4,'2020-06-21 20:30:00',2,7);
 /*!40000 ALTER TABLE `evento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,7 +104,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'Daniel Cuevas Pérez','DanielCP89@gmail.com','1234',0,'Almería',''),(2,'Francisco Javier Santiburcio','JavierJS@gmail.com','1234',0,'Almería',''),(3,'Jose Luis González','JoseLG@gmail.com','1234',0,'Huelva',''),(4,'Rayan Chaves','RayanCDS@gmail.com','1234',0,'Granada',''),(6,'admin','admin','admin',1,'Málaga',NULL),(7,'Rodrigo','Rodrigo@gmail.com','1234',0,'Jaén','');
+INSERT INTO `usuarios` VALUES (1,'Daniel Cuevas Pérez','DanielCP89@gmail.com','1234',0,'Málaga',''),(2,'Francisco Javier Santiburcio','JavierJS@gmail.com','1234',0,'Málaga',''),(3,'Jose Luis González','JoseLG@gmail.com','1234',0,'Málaga',''),(4,'Rayan Chaves','RayanCDS@gmail.com','1234',0,'Málaga',''),(6,'admin','admin','admin',1,'Málaga',NULL),(7,'Rodrigo','Rodrigo@gmail.com','1234',0,'Málaga','');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,7 +132,7 @@ CREATE TABLE `usuarios_has_deporte` (
 
 LOCK TABLES `usuarios_has_deporte` WRITE;
 /*!40000 ALTER TABLE `usuarios_has_deporte` DISABLE KEYS */;
-INSERT INTO `usuarios_has_deporte` VALUES (1,1),(2,1),(1,2),(2,2),(1,3),(2,3),(4,4),(3,8),(7,9),(3,20);
+INSERT INTO `usuarios_has_deporte` VALUES (1,1),(4,4),(3,7),(7,9),(2,19);
 /*!40000 ALTER TABLE `usuarios_has_deporte` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,6 +160,7 @@ CREATE TABLE `usuarios_has_evento` (
 
 LOCK TABLES `usuarios_has_evento` WRITE;
 /*!40000 ALTER TABLE `usuarios_has_evento` DISABLE KEYS */;
+INSERT INTO `usuarios_has_evento` VALUES (3,3),(2,5),(2,6),(1,7),(1,8),(1,9),(3,10),(3,11),(1,12),(1,13),(1,14),(2,14),(3,15),(3,16),(3,17),(2,18),(2,19),(2,20);
 /*!40000 ALTER TABLE `usuarios_has_evento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -175,4 +177,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-08 22:01:27
+-- Dump completed on 2020-06-09 23:00:46
